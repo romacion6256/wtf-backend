@@ -1,21 +1,31 @@
 package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.io.Serializable;
+import java.time.LocalDate;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+
 @Entity
-@Table(name = "GENRE")
+@Table(name = "CARD")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Genre implements Serializable{
+public class Card implements Serializable{
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "ID_GENRE")
-    private Long idGenre;
+    @Column(name = "CARD_NUMBER")
+    private Long cardNumber;
+
+    @Column(name = "EXPIRATION_DATE")
+    private LocalDate expirationDate;
+
+    @Column(name = "CVV")
+    private int cvv;
 
 }

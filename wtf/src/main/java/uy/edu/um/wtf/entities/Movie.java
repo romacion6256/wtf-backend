@@ -1,13 +1,9 @@
 package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.io.Serializable;
-import java.util.Date;
-
 import static jakarta.persistence.GenerationType.IDENTITY;
-import java.util.LinkedList;
-import java.util.List;
+
 
 @Entity
 @Table(name = "MOVIE")

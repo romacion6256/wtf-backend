@@ -8,7 +8,8 @@ import java.util.Date;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import java.util.LinkedList;
 import java.util.List;
-
+import uy.edu.um.wtf.entities.Reservation;
+import uy.edu.um.wtf.entities.Card;
 
 @Entity
 @Table(name = "USER")
@@ -48,5 +49,12 @@ public class User implements Serializable{
 
     @Column(name = "EMAIL")
     private String email;
+
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations;
+
+    @OneToOne
+    @JoinColumn(name = "CARD_ID")
+    private Card card;
 
 }
