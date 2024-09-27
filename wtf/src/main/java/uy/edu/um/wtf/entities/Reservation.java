@@ -30,6 +30,9 @@ public class Reservation implements Serializable {
     @Column(name = "PAYMENT_METHOD")
     private String paymentMethod;
 
+    @Column(name = "NRO_ASIENTO")
+    private int nroAsiento;
+
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
