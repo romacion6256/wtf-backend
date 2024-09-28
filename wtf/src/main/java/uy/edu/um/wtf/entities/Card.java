@@ -22,10 +22,15 @@ public class Card implements Serializable{
     @Column(name = "CARD_NUMBER")
     private Long cardNumber;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "EXPIRATION_DATE")
     private LocalDate expirationDate;
 
     @Column(name = "CVV")
     private int cvv;
+
+    // Relationship with User (One to One)
+    @OneToOne(mappedBy = "card")
+    private User user; // Relationship inverse
 
 }

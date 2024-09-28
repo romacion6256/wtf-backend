@@ -17,10 +17,10 @@ public class Branch implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "ID_BRANCH")
+    @Column(name = "ID")
     private Long idBranch;
 
-    @Column(name = "BRANCH_NAME")
+    @Column(name = "NAME")
     private String branchName;
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)

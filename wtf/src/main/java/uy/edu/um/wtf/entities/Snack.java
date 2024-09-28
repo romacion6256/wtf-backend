@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -29,4 +31,7 @@ public class Snack implements Serializable{
     @ManyToOne
     @JoinColumn(name = "RESERVATION_ID")
     private Reservation reservation;
+
+    /*@ManyToMany(mappedBy = "snacks")
+    private List<Reservation> reservations; // Relación inversa*/
 }

@@ -2,6 +2,9 @@ package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 
@@ -16,19 +19,22 @@ public class Movie implements Serializable{
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "ID_MOVIE")
+    @Column(name = "ID")
     private Long idMovie;
 
-    @Column(name = "MOVIE_NAME")
+    @Column(name = "NAME")
     private String movieName;
 
     @Column(name = "YEAR")
     private int year;
 
-    @Column(name = "DIRECTOR_NAME")
+    @Column(name = "DIRECTOR")
     private String directorName;
 
     @Column(name = "DURATION")
     private Integer duration;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Builder.Default
+    private List<Function> albums = new LinkedList<Function>();
 }

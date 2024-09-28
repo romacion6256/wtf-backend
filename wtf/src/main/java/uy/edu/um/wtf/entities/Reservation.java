@@ -21,8 +21,8 @@ import uy.edu.um.wtf.entities.Card;
 public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RESERVATION_ID")
-    private Long reservationId;
+    @Column(name = "ID")
+    private Long idReservation;
 
     @Column(name = "STATUS")
     private String status;
@@ -30,17 +30,29 @@ public class Reservation implements Serializable {
     @Column(name = "PAYMENT_METHOD")
     private String paymentMethod;
 
-    @Column(name = "NRO_ASIENTO")
-    private int nroAsiento;
+    @Column(name = "ROW_SEAT")
+    private int rowSeat;
 
-    @ManyToOne
+    @Column(name = "COLUMN_SEAT")
+    private int columnSeat;
+
+    /*@ManyToOne
     @JoinColumn(name = "USER_ID")
+    private User user;*/
+
+    // Relationship with User (Many to One, using composite key)
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "USER_NAME", referencedColumnName = "USER_NAME"),
+            @JoinColumn(name = "ID", referencedColumnName = "ID"),
+            @JoinColumn(name = "EMAIL", referencedColumnName = "EMAIL")
+    })
     private User user;
 
     @OneToMany(mappedBy = "reservation")
     private List<Snack> snacks;
 
-    @OneToOne
-    @JoinColumn(name = "SHOWTIME_ID")
-    private Function showtime;
+    @ManyToOne
+    @JoinColumn(name = "idFunction", nullable = false)
+    private Function function;
 }

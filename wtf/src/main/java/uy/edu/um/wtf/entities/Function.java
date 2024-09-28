@@ -5,6 +5,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -19,7 +20,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class Function implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_FUNCTION")
+    @Column(name = "ID")
     private Long idFunction;
 
     @Column(name = "FORMAT")
@@ -28,6 +29,7 @@ public class Function implements Serializable{
     @Column(name = "SUBTITLED")
     private Boolean subtitled;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE")
     private LocalDate date;
 
@@ -38,6 +40,14 @@ public class Function implements Serializable{
     @JoinColumn(name = "MOVIE_ID")
     private Movie movie;
 
-    @OneToOne(mappedBy = "function")
-    private Reservation reservation;
+    @OneToOne
+    @JoinColumn(name = "room", nullable = false)
+    private Room room;
+
+    @OneToMany(mappedBy = "function")
+    private List<Reservation> reservations; // Relación inversa
+
+
+    /*@OneToOne(mappedBy = "function")
+    private Reservation reservation;*/
 }

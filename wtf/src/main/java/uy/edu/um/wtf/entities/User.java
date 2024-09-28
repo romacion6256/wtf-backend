@@ -20,13 +20,15 @@ import uy.edu.um.wtf.entities.Card;
 @NoArgsConstructor
 public class User implements Serializable{
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "ID_USER")
-    private Long idUser;
+    // PK COMPUESTA
+    @EmbeddedId
+    private MyEmbeddedId myEmbeddedId;
+    /*@GeneratedValue(strategy = IDENTITY)
+    @Column(name = "ID")
+    private Long idUser;*/
 
-    @Column(name = "USER_NAME")
-    private String userName;
+    /*@Column(name = "USER_NAME")
+    private String userName;*/
 
     @Column(name = "PASSWORD")
     private String password;
@@ -47,14 +49,15 @@ public class User implements Serializable{
     @Column(name = "ADRESS")
     private String adress;
 
-    @Column(name = "EMAIL")
-    private String email;
+    /*@Column(name = "EMAIL")
+    private String email;*/
 
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
+    // Relationship with Card (One to One)
     @OneToOne
-    @JoinColumn(name = "CARD_ID")
-    private Card card;
+    @JoinColumn(name = "CARD_ID", referencedColumnName = "CARD_NUMBER", nullable = false)
+    private Card card; // Relationship to Card
 
 }

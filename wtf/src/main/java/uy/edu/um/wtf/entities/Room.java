@@ -29,7 +29,5 @@ public class Room implements Serializable{
     @JoinColumn(name = "BRANCH_ID", nullable = false)
     private Branch branch;
 
-    // A room can have many seats (OneToMany relationship)
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<Seat> seats;
+
 }
