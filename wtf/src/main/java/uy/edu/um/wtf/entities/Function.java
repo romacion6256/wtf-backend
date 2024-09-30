@@ -40,7 +40,7 @@ public class Function implements Serializable{
     @JoinColumn(name = "MOVIE_ID")
     private Movie movie;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "room", nullable = false)
     private Room room;
 

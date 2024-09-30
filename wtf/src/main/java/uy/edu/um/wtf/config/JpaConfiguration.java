@@ -40,7 +40,7 @@ public class JpaConfiguration
     {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPackagesToScan("uy.edu.um");
-        factoryBean.setDataSource(dataSource());
+        //factoryBean.setDataSource(dataSource());
         factoryBean.setJpaProperties(hibernateProperties());
         factoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         factoryBean.afterPropertiesSet();
@@ -62,7 +62,7 @@ public class JpaConfiguration
         return hibernateProp;
     }
 
-    @Bean
+    /*@Bean
     public DataSource dataSource()
     {
         try
@@ -76,6 +76,6 @@ public class JpaConfiguration
             System.out.println("No se pudo crear el DS embebido");
             return null;
         }
-    }
+    }*/
 }
 

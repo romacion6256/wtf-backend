@@ -36,5 +36,5 @@ public class Movie implements Serializable{
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
-    private List<Function> albums = new LinkedList<Function>();
+    private List<Function> functions = new LinkedList<Function>();
 }

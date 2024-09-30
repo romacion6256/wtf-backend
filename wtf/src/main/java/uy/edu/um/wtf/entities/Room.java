@@ -29,5 +29,9 @@ public class Room implements Serializable{
     @JoinColumn(name = "BRANCH_ID", nullable = false)
     private Branch branch;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Builder.Default
+    private List<Function> rooms = new LinkedList<Function>();
+
 
 }
