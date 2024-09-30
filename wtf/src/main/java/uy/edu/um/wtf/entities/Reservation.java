@@ -36,18 +36,18 @@ public class Reservation implements Serializable {
     @Column(name = "COLUMN_SEAT")
     private int columnSeat;
 
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User user;*/
+    private User user;
 
-    // Relationship with User (Many to One, using composite key)
+    /*// Relationship with User (Many to One, using composite key)
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "USER_NAME", referencedColumnName = "USER_NAME"),
             @JoinColumn(name = "ID", referencedColumnName = "ID"),
             @JoinColumn(name = "EMAIL", referencedColumnName = "EMAIL")
     })
-    private User user;
+    private User user;*/
 
     @OneToMany(mappedBy = "reservation")
     private List<Snack> snacks;
