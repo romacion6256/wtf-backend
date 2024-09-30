@@ -31,7 +31,7 @@ public class Room implements Serializable{
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
-    private List<Function> rooms = new LinkedList<Function>();
+    private List<Function> functions = new LinkedList<Function>();
 
 
 }
