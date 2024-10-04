@@ -6,7 +6,6 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import org.apache.log4j.chainsaw.Main;
 import org.apache.poi.ss.formula.functions.DMax;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -27,13 +26,11 @@ public class Card implements Serializable{
     private Long cardNumber;
 
     @Column(name = "EXPIRATION_MONTH")
-    Main(1)
-    @Max(12)
     private int expirationMonth;
 
     @Column(name = "EXPIRATION_YEAR")
+
     private int expirationYear;
-   
 
     @Column(name = "CVV")
     private int cvv;
