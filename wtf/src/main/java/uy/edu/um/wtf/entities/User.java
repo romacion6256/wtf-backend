@@ -5,9 +5,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-import java.util.LinkedList;
-import java.util.List;
+import org.hibernate.annotations.GenericGenerator;
 import uy.edu.um.wtf.entities.Reservation;
 import uy.edu.um.wtf.entities.Card;
 
@@ -18,6 +16,8 @@ import uy.edu.um.wtf.entities.Card;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "TYPE", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable{
 
     /*// PK COMPUESTA
@@ -25,10 +25,11 @@ public class User implements Serializable{
     private MyEmbeddedId myEmbeddedId;
     *//*@GeneratedValue(strategy = IDENTITY)*/
 
-    @Column(name = "ID")
-    private Long idUser;
-
     @Id
+    @GeneratedValue
+    @GenericGenerator(name = "ID", strategy = "increment")
+    private Long id;
+
     @Column(name = "USER_NAME")
     private String userName;
 
@@ -40,6 +41,9 @@ public class User implements Serializable{
 
     @Column(name = "SURNAME")
     private String surname;
+
+    @Column(name = "DOCUMENT")
+    private Long document;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTH_DATE")
@@ -54,12 +58,12 @@ public class User implements Serializable{
     @Column(name = "EMAIL")
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<Reservation> reservations;
+    //@OneToMany(mappedBy = "user")
+    //private List<Reservation> reservations;
 
     // Relationship with Card (One to One)
-    @OneToOne
-    @JoinColumn(name = "CARD_ID", referencedColumnName = "CARD_NUMBER", nullable = false)
-    private Card card; // Relationship to Card
+    //@OneToOne
+    //@JoinColumn(name = "CARD_ID", referencedColumnName = "CARD_NUMBER", nullable = false)
+    //private Card card; // Relationship to Card
 
 }

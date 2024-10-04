@@ -29,7 +29,6 @@ public class Card implements Serializable{
     private int expirationMonth;
 
     @Column(name = "EXPIRATION_YEAR")
-
     private int expirationYear;
 
     @Column(name = "CVV")
