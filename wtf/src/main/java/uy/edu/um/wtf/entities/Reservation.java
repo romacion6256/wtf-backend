@@ -37,22 +37,18 @@ public class Reservation implements Serializable {
     private int columnSeat;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
-
-    /*// Relationship with User (Many to One, using composite key)
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "USER_NAME", referencedColumnName = "USER_NAME"),
-            @JoinColumn(name = "ID", referencedColumnName = "ID"),
-            @JoinColumn(name = "EMAIL", referencedColumnName = "EMAIL")
-    })
-    private User user;*/
-
-    @OneToMany(mappedBy = "reservation")
-    private List<Snack> snacks;
+    @JoinColumn(name = "ID_CLIENT")
+    private Client client; // Relación con Cliente
 
     @ManyToOne
-    @JoinColumn(name = "idFunction", nullable = false)
-    private Function function;
+    @JoinColumn(name = "ID_FUNCTION")
+    private Function function; // Relación con Funcion
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "RESERVATION_SNACK", // Nombre de la tabla intermedia
+            joinColumns = @JoinColumn(name = "ID_RESERVATION"),
+            inverseJoinColumns = @JoinColumn(name = "ID_SNACK")
+    )
+    private List<Snack> snacks; // Relación con Snacks (opcional)
 }

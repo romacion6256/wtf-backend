@@ -44,10 +44,10 @@ public class Function implements Serializable{
     @JoinColumn(name = "room", nullable = false)
     private Room room;
 
-    @OneToMany(mappedBy = "function")
-    private List<Reservation> reservations; // Relación inversa
+    @OneToMany(mappedBy = "function", cascade = CascadeType.ALL)
+    private List<Reservation> reservations; // Relación con Reserva
 
-
-    /*@OneToOne(mappedBy = "function")
-    private Reservation reservation;*/
+    @ManyToOne
+    @JoinColumn(name = "ADMIN_ID", nullable = false) // Clave foránea
+    private Admin admin; // Referencia al administrador que creó la función
 }

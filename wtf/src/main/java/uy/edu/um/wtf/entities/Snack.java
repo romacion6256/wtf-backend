@@ -28,10 +28,11 @@ public class Snack implements Serializable{
     @Column(name = "PRICE")
     private BigDecimal price;
 
-    @ManyToOne
-    @JoinColumn(name = "RESERVATION_ID")
-    private Reservation reservation;
+    @ManyToMany(mappedBy = "snacks")
+    private List<Reservation> reservations; // Relación con Reservas
 
-    /*@ManyToMany(mappedBy = "snacks")
-    private List<Reservation> reservations; // Relación inversa*/
+    // Relación muchos a uno con la entidad Admin
+    @ManyToOne
+    @JoinColumn(name = "ADMIN_ID", nullable = false) // Clave foránea
+    private Admin admin; // Referencia al administrador que creó el snack
 }

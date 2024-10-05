@@ -58,12 +58,4 @@ public class User implements Serializable{
     @Column(name = "EMAIL")
     private String email;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<Reservation> reservations;
-
-    // Relationship with Card (One to One)
-    //@OneToOne
-    //@JoinColumn(name = "CARD_ID", referencedColumnName = "CARD_NUMBER", nullable = false)
-    //private Card card; // Relationship to Card
-
 }

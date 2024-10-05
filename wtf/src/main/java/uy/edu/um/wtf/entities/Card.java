@@ -1,12 +1,8 @@
 package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-
-import org.apache.poi.ss.formula.functions.DMax;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -34,8 +30,8 @@ public class Card implements Serializable{
     @Column(name = "CVV")
     private int cvv;
 
-    // Relationship with User (One to One)
+    // Relación uno a uno inversa con la entidad Client
     @OneToOne(mappedBy = "card")
-    private User user; // Relationship inverse
+    private Client client;
 
 }
