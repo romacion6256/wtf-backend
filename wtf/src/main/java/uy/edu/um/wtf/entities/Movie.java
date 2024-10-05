@@ -18,7 +18,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class Movie implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long idMovie;
 

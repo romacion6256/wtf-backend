@@ -16,7 +16,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class Branch implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long idBranch;
 

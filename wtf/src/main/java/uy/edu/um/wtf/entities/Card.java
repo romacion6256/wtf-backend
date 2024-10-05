@@ -17,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class Card implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CARD_NUMBER")
     private Long cardNumber;
 

@@ -1,19 +1,17 @@
 package uy.edu.um.wtf.entities;
+
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.hibernate.annotations.GenericGenerator;
-import uy.edu.um.wtf.entities.Reservation;
-import uy.edu.um.wtf.entities.Card;
 
 @Entity
 @Table(name = "USER")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -26,8 +24,8 @@ public class User implements Serializable{
     *//*@GeneratedValue(strategy = IDENTITY)*/
 
     @Id
-    @GeneratedValue
-    @GenericGenerator(name = "ID", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "USER_NAME")

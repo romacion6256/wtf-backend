@@ -1,15 +1,9 @@
 package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.io.Serializable;
-import java.util.Date;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
-import java.util.LinkedList;
 import java.util.List;
-import uy.edu.um.wtf.entities.Reservation;
-import uy.edu.um.wtf.entities.Card;
+
 
 @Entity
 @Table(name = "RESERVATION")
