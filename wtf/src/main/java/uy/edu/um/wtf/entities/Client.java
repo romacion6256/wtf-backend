@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.List;
 
 @Entity
-@Table(name = "CLIENT")
+//@Table(name = "CLIENT")
 @Getter
 @Setter
 @SuperBuilder
