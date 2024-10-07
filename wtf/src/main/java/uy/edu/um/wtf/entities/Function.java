@@ -26,7 +26,6 @@ public class Function implements Serializable{
     @Column(name = "SUBTITLED")
     private Boolean subtitled;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE")
     private LocalDate date;
 
@@ -42,9 +41,9 @@ public class Function implements Serializable{
     private Room room;
 
     @OneToMany(mappedBy = "function", cascade = CascadeType.ALL)
-    private List<Reservation> reservations; // Relación con Reserva
+    private List<Reservation> reservations;
 
     @ManyToOne
-    @JoinColumn(name = "ADMIN_ID", nullable = false) // Clave foránea
-    private Admin admin; // Referencia al administrador que creó la función
+    @JoinColumn(name = "ADMIN_ID", nullable = false)
+    private Admin admin;
 }
