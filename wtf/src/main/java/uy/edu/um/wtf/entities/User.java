@@ -18,11 +18,6 @@ import java.util.Date;
 @DiscriminatorColumn(name = "TYPE", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable{
 
-    /*// PK COMPUESTA
-    @EmbeddedId
-    private MyEmbeddedId myEmbeddedId;
-    *//*@GeneratedValue(strategy = IDENTITY)*/
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
