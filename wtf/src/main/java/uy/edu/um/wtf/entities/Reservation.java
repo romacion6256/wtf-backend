@@ -2,6 +2,7 @@ package uy.edu.um.wtf.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,6 +30,10 @@ public class Reservation implements Serializable {
 
     @Column(name = "COLUMN_SEAT")
     private int columnSeat;
+
+    @Column(name = "RESERVATION_DATE")
+    @Temporal(TemporalType.DATE)
+    private Date reservationDate;
 
     @ManyToOne
     @JoinColumn(name = "ID_CLIENT")
