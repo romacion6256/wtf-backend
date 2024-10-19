@@ -20,6 +20,9 @@ public class Genre implements Serializable{
     @Column(name = "ID_GENRE")
     private Long idGenre;
 
+    @Column (name = "NAME")
+    private String name;
+
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     private List<Movie> movies; // Relación con Pelicula
 }
