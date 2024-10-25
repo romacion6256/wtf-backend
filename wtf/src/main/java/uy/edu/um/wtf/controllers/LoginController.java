@@ -11,7 +11,7 @@ import uy.edu.um.wtf.serivces.UserService;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
 
@@ -32,6 +32,6 @@ public class LoginController {
         } catch (InvalidInformation e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Logueado correctamente");
     }
 }

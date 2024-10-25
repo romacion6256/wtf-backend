@@ -2,6 +2,7 @@ package uy.edu.um.wtf.serivces;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uy.edu.um.wtf.entities.Client;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.exceptions.ExistingUser;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
@@ -13,15 +14,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addUser(User user) throws InvalidInformation, ExistingUser {
-        if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
+    public void addClient(Client client) throws InvalidInformation, ExistingUser {
+        if (userRepository.findOneByEmail(client.getEmail()).isPresent()) {
             throw new ExistingUser("User with that email already exists");
         }
-        if (!validEmail(user.getEmail())) {
+        if (!validEmail(client.getEmail())) {
             throw new InvalidInformation("Invalid email");
         }
-        userRepository.save(user);
-        System.out.println("User saved successfully: " + user.getEmail());
+        userRepository.save(client);
+        System.out.println("User saved successfully: " + client.getEmail());
     }
 
     public boolean validEmail(String email) {
@@ -37,20 +38,18 @@ public class UserService {
         return user;
     }
 
-    public User registerUser(String nombre, String email, String password) throws InvalidInformation, ExistingUser {
-
-        return userRepository.save(user);
-    }
-
-    public validarRegister(String nombre, String email, String password) throws InvalidInformation, ExistingUser {
-        User user = new User();
-        if (!validEmail(email)) {
-            throw new InvalidInformation("Invalid email");
-        }
-        if (userRepository.findOneByEmail(email).isPresent()) {
+    public Client registerClient(String nombre, String email, String password) throws InvalidInformation, ExistingUser {
+        Client client = new Client();
+        client.setUserName(nombre);
+        client.setEmail(email);
+        client.setPassword(password);
+        try {
+            addClient(client);
+            return client;
+        } catch (ExistingUser e) {
             throw new ExistingUser("User with that email already exists");
         }
-        return true;
     }
+
 
 }
