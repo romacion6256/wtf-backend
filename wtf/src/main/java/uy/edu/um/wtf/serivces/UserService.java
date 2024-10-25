@@ -2,6 +2,7 @@ package uy.edu.um.wtf.serivces;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uy.edu.um.wtf.entities.Admin;
 import uy.edu.um.wtf.entities.Client;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.exceptions.ExistingUser;
@@ -22,7 +23,7 @@ public class UserService {
             throw new InvalidInformation("Invalid email");
         }
         userRepository.save(client);
-        System.out.println("User saved successfully: " + client.getEmail());
+        System.out.println("Client saved successfully: " + client.getEmail());
     }
 
     public boolean validEmail(String email) {
@@ -52,5 +53,29 @@ public class UserService {
         }
     }
 
+    public void addAdmin(Admin admin) throws InvalidInformation, ExistingUser {
+        if (userRepository.findOneByEmail(admin.getEmail()).isPresent()) {
+            throw new ExistingUser("User with that email already exists");
+        }
+        if (!validEmail(admin.getEmail())) {
+            throw new InvalidInformation("Invalid email");
+        }
+        userRepository.save(admin);
+        System.out.println("Admin saved successfully: " + admin.getEmail());
+    }
+
+    public Admin registerAdmin(String nombre, String email, String password) throws InvalidInformation, ExistingUser {
+        Admin admin = new Admin();
+        admin.setUserName(nombre);
+        admin.setEmail(email);
+        admin.setPassword(password);
+        admin.setRole("ADMIN");
+        try {
+            addAdmin(admin);
+            return admin;
+        } catch (ExistingUser e) {
+            throw new ExistingUser("User with that email already exists");
+        }
+    }
 
 }

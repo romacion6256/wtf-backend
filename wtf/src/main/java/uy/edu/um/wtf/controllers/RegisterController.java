@@ -28,6 +28,20 @@ public class RegisterController {
         } catch (InvalidInformation | ExistingUser e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok("Usuario creado correctamente");
+        return ResponseEntity.ok("Cliente creado correctamente");
+    }
+
+    @PostMapping("/registerAdmin")
+    public ResponseEntity<?> adminRegister(@RequestBody Map<String, String> userData) {
+        String nombreUsuario = userData.get("nombre");
+        String email = userData.get("email");
+        String contraseña = userData.get("contraseña");
+
+        try {
+            userService.registerAdmin(nombreUsuario, email, contraseña);
+        } catch (InvalidInformation | ExistingUser e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok("Administrador creado correctamente");
     }
 }
