@@ -28,10 +28,10 @@ public class LoginController {
             System.out.println(usuario.getEmail());
             session.isNew();
             session.setAttribute("user", usuario);
+            return ResponseEntity.ok(usuario);
 
         } catch (InvalidInformation e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok("Logueado correctamente");
     }
 }
