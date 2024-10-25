@@ -13,7 +13,6 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorValue("CLIENT")
 public class Client extends User {
 
     // Relación uno a uno con la entidad Tarjeta

@@ -43,6 +43,7 @@ public class UserService {
         client.setUserName(nombre);
         client.setEmail(email);
         client.setPassword(password);
+        client.setRole("CLIENT");
         try {
             addClient(client);
             return client;

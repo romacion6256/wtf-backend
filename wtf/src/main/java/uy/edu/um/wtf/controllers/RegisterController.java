@@ -18,7 +18,7 @@ public class RegisterController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> Register(@RequestBody Map<String, String> userData) {
+    public ResponseEntity<?> clientRegister(@RequestBody Map<String, String> userData) {
         String nombreUsuario = userData.get("nombre");
         String email = userData.get("email");
         String contraseña = userData.get("contraseña");

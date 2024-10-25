@@ -14,14 +14,15 @@ import java.util.Date;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TYPE", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    
+    @Column(name = "ROLE")
+    private String role;
 
     @Column(name = "USER_NAME")
     private String userName;
@@ -50,5 +51,5 @@ public class User implements Serializable{
 
     @Column(name = "EMAIL")
     private String email;
-
+    
 }

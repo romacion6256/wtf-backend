@@ -13,7 +13,6 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorValue("ADMIN")
 public class Admin extends User {
 
     // Relación uno a muchos con la entidad Snack
