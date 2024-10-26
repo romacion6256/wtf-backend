@@ -19,7 +19,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<?> clientRegister(@RequestBody Map<String, String> userData) {
-        String nombreUsuario = userData.get("nombre");
+        String nombreUsuario = userData.get("usuario");
         String email = userData.get("email");
         String contraseña = userData.get("contraseña");
 
@@ -33,7 +33,7 @@ public class RegisterController {
 
     @PostMapping("/registerAdmin")
     public ResponseEntity<?> adminRegister(@RequestBody Map<String, String> userData) {
-        String nombreUsuario = userData.get("nombre");
+        String nombreUsuario = userData.get("usuario");
         String email = userData.get("email");
         String contraseña = userData.get("contraseña");
 
