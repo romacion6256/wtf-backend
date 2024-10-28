@@ -1,5 +1,6 @@
 package uy.edu.um.wtf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -22,6 +23,7 @@ public class Admin extends User {
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Function> functions; // Lista de funciones creadas por este admin
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Movie> movies; // Lista de películas creadas por este admin
 }

@@ -34,4 +34,10 @@ public class LoginController {
             throw new RuntimeException(e);
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Sesión cerrada correctamente");
+    }
 }

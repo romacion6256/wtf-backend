@@ -1,4 +1,5 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public class Movie implements Serializable{
     @Builder.Default
     private List<Function> functions = new LinkedList<Function>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ADMIN_ID", nullable = false) // Clave foránea
     private Admin admin; // Referencia al administrador que creó la película
