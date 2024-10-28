@@ -31,7 +31,7 @@ public class FunctionService {
         if (funcion.getRoom() == null) {
             throw new InvalidInformation("La sala no puede ser nula");
         }
-        if (functionRepository.findByFormatAndSubtitledAndDateAndTimeAnAndMovieAndRoom(funcion.getFormat(), funcion.getSubtitled(), funcion.getDate(), funcion.getTime(), funcion.getMovie(), funcion.getRoom()).isPresent()) {
+        if (functionRepository.findByFormatAndSubtitledAndDateAndTimeAndMovieAndRoom(funcion.getFormat(), funcion.getSubtitled(), funcion.getDate(), funcion.getTime(), funcion.getMovie(), funcion.getRoom()).isPresent()) {
             throw new InvalidInformation("La funcion ya existe");
         }
         return functionRepository.save(funcion);
