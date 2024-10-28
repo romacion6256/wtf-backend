@@ -44,11 +44,8 @@ public class Movie implements Serializable{
     @JoinColumn(name = "ADMIN_ID", nullable = false) // Clave foránea
     private Admin admin; // Referencia al administrador que creó la película
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "MOVIE_GENRE", // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "ID_MOVIE"), // Columna de la tabla película
-            inverseJoinColumns = @JoinColumn(name = "ID_GENRE") // Columna de la tabla género
-    )
-    private List<Genre> genres; // Relación con Genero
+    @ManyToOne
+    @JoinColumn(name = "GENRE_ID", nullable = false) // Clave foránea
+    private Genre genre;
 }
+

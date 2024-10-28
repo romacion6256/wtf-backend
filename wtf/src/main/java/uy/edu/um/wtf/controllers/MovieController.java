@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uy.edu.um.wtf.entities.Admin;
+import uy.edu.um.wtf.entities.Genre;
 import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
+import uy.edu.um.wtf.repository.GenreRepository;
 import uy.edu.um.wtf.serivces.MovieService;
 import uy.edu.um.wtf.serivces.UserService;
 
@@ -25,6 +27,9 @@ public class MovieController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private GenreRepository genreRepository;
+
     @GetMapping("/obtenerTodas")
     public List<Movie> obtenerTodas () {
         List<Movie> movies = movieService.obtenerTodasLasPeliculas();
@@ -37,7 +42,9 @@ public class MovieController {
         int movieYear = Integer.parseInt(payload.get("movieYear"));
         String nombreDirector = payload.get("nombreDirector");
         Integer duracion = Integer.parseInt(payload.get("duracion"));
-        //String genero = payload.get("genero"); tiene q ser una lista
+        String genre = payload.get("genero");
+
+        Genre genero = genreRepository.findByName(genre).orElseThrow(() -> new InvalidInformation("El genero no existe"));
         User administrador = userService.getUserById(idAdmin);
 
         Movie pelicula = new Movie();
@@ -46,6 +53,7 @@ public class MovieController {
         pelicula.setDirectorName(nombreDirector);
         pelicula.setDuration(duracion);
         pelicula.setAdmin((Admin) administrador);
+        pelicula.setGenre(genero);
 
         try {
             movieService.agregarPelicula(pelicula);
@@ -53,9 +61,5 @@ public class MovieController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
     }
-
 }

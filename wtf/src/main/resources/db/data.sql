@@ -56,3 +56,13 @@ INSERT INTO room (room_id, number, branch_id) VALUES (46, 3, 8) ON CONFLICT (roo
 INSERT INTO room (room_id, number, branch_id) VALUES (47, 4, 8) ON CONFLICT (room_id) DO NOTHING;
 INSERT INTO room (room_id, number, branch_id) VALUES (48, 5, 8) ON CONFLICT (room_id) DO NOTHING;
 INSERT INTO room (room_id, number, branch_id) VALUES (49, 6, 8) ON CONFLICT (room_id) DO NOTHING;
+
+INSERT INTO genre (genre_id, name) VALUES (1, 'TERROR') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (2, 'COMEDIA') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (3, 'DRAMA') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (4, 'ACCION') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (5, 'ROMANCE') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (6, 'CIENCIA FICCION') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (7, 'ANIMACION') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (8, 'AVENTURA') ON CONFLICT (genre_id) DO NOTHING;
+INSERT INTO genre (genre_id, name) VALUES (9, 'FANTASIA') ON CONFLICT (genre_id) DO NOTHING;

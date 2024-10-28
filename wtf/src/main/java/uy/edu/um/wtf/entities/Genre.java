@@ -1,4 +1,5 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -17,12 +18,13 @@ public class Genre implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_GENRE")
+    @Column(name = "GENRE_ID")
     private Long idGenre;
 
     @Column (name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    private List<Movie> movies; // Relación con Pelicula
+    @JsonIgnore
+    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
+    private List<Movie> movies; // Lista de peliculas que tienen el genero
 }

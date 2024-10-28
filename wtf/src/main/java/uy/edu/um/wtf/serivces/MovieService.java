@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
-import uy.edu.um.wtf.exceptions.NonExistingEntitie;
 import uy.edu.um.wtf.repository.MovieRepository;
 
 import java.util.List;
