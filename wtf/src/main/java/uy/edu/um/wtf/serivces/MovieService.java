@@ -33,4 +33,7 @@ public class MovieService {
         }
         return movieRepository.save(movie);
     }
+    public Movie getMovieById(Long id) {
+        return movieRepository.findById(id).orElse(null);
+    }
 }

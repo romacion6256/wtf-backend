@@ -29,6 +29,9 @@ public class Movie implements Serializable{
     @Column(name = "YEAR")
     private int year;
 
+    @Column(name = "PUNTUACION")
+    private float puntuacion;
+
     @Column(name = "DIRECTOR")
     private String directorName;
 

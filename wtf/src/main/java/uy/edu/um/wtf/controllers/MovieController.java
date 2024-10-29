@@ -10,6 +10,7 @@ import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.GenreRepository;
+import uy.edu.um.wtf.repository.MovieRepository;
 import uy.edu.um.wtf.serivces.MovieService;
 import uy.edu.um.wtf.serivces.UserService;
 
@@ -23,6 +24,9 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+
+    @Autowired
+    private MovieRepository movieRepository;
 
     @Autowired
     private UserService userService;
@@ -51,6 +55,7 @@ public class MovieController {
         pelicula.setMovieName(movieName);
         pelicula.setYear(movieYear);
         pelicula.setDirectorName(nombreDirector);
+        pelicula.setPuntuacion(0);
         pelicula.setDuration(duracion);
         pelicula.setAdmin((Admin) administrador);
         pelicula.setGenre(genero);
@@ -61,5 +66,19 @@ public class MovieController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/calificar/{idPelicula}")
+    public ResponseEntity<String> calificarPelicula(@PathVariable Long idPelicula, @RequestBody Map<String, String> payload) {
+        float puntuacion = Float.parseFloat(payload.get("puntuacion"));
+        Movie movie = movieService.getMovieById(idPelicula);
+        try {
+            movie.setPuntuacion(puntuacion);
+            movieRepository.save(movie);
+            return ResponseEntity.ok("Pelicula calificada correctamente");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
