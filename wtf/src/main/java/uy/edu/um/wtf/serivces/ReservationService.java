@@ -20,4 +20,10 @@ public class ReservationService {
         return reservationRepository.findByClient_Id(clientId);
     }
 
+    public void cancelarReserva(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("El id de la reserva no puede ser nulo");
+        }
+        reservationRepository.deleteById(id);
+    }
 }
