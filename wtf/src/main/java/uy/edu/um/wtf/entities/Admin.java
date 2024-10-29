@@ -17,9 +17,11 @@ import java.util.List;
 public class Admin extends User {
 
     // Relación uno a muchos con la entidad Snack
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Snack> snacks; // Lista de snacks creados por el administrado
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Function> functions; // Lista de funciones creadas por este admin
 
