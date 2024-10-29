@@ -1,4 +1,6 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -35,10 +37,12 @@ public class Reservation implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date reservationDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ID_CLIENT")
     private Client client; // Relación con Cliente
 
+    @JsonIgnoreProperties({"reservations", "admin", "movie", "room"})
     @ManyToOne
     @JoinColumn(name = "ID_FUNCTION")
     private Function function; // Relación con Funcion
