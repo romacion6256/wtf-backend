@@ -1,6 +1,7 @@
 package uy.edu.um.wtf.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class Function implements Serializable{
     @JoinColumn(name = "room", nullable = false)
     private Room room;
 
-    @JsonIgnore
+    @JsonIgnoreProperties({"function","snacks","idReservation","status","paymentMethod","reservationDate"})
     @OneToMany(mappedBy = "function", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 

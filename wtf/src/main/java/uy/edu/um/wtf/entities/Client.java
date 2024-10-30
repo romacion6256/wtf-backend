@@ -1,5 +1,6 @@
 package uy.edu.um.wtf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -20,6 +21,7 @@ public class Client extends User {
     @JoinColumn(name = "CARD_NUMBER", referencedColumnName = "CARD_NUMBER")
     private Card card;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Reservation> reservations; // Relación con Reserva
 }
