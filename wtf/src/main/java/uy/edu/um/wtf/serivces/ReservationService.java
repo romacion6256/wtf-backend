@@ -26,4 +26,23 @@ public class ReservationService {
         }
         reservationRepository.deleteById(id);
     }
+
+    public void crearReserva(Reservation reserva) {
+        if (reserva == null) {
+            throw new IllegalArgumentException("La reserva no puede ser nula");
+        }
+        if (reserva.getClient() == null) {
+            throw new IllegalArgumentException("El cliente de la reserva no puede ser nulo");
+        }
+        if (reserva.getFunction() == null) {
+            throw new IllegalArgumentException("La funcion de la reserva no puede ser nula");
+        }
+        if (reserva.getPaymentMethod() == null || reserva.getPaymentMethod().isEmpty()) {
+            throw new IllegalArgumentException("El metodo de pago de la reserva no puede ser nulo o vacio");
+        }
+        if (!reservationRepository.findByColumnSeatAndRowSeat(reserva.getColumnSeat(), reserva.getRowSeat()).isEmpty()) {
+            throw new IllegalArgumentException("El asiento ya esta ocupado");
+        }
+        reservationRepository.save(reserva);
+    }
 }

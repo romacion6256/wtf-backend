@@ -8,4 +8,6 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findByClient_Id(Long clientId);
+
+    List<Reservation> findByColumnSeatAndRowSeat (int columnSeat, int rowSeat);
 }

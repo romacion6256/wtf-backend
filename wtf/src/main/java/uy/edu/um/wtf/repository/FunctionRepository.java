@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface FunctionRepository extends JpaRepository<Function, Long> {
 
     Optional<Function> findByFormatAndSubtitledAndDateAndTimeAndMovieAndRoom(String format, Boolean subtitled, LocalDate date, LocalTime time, Movie movie, Room room);
+
+    Optional<Function> findByIdFunction (Long idFunction);
 }
