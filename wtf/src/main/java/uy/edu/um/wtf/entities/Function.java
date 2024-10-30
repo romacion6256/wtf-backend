@@ -1,5 +1,6 @@
 package uy.edu.um.wtf.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -40,9 +41,11 @@ public class Function implements Serializable{
     @JoinColumn(name = "room", nullable = false)
     private Room room;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "function", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ADMIN_ID", nullable = false)
     private Admin admin;

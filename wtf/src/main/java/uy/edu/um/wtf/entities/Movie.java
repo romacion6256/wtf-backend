@@ -38,6 +38,7 @@ public class Movie implements Serializable{
     @Column(name = "DURATION")
     private Integer duration;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     private List<Function> functions = new LinkedList<Function>();

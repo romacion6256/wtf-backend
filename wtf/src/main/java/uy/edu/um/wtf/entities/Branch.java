@@ -1,4 +1,5 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ public class Branch implements Serializable {
     @Column(name = "NAME")
     private String branchName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     private List<Room> rooms;
 }

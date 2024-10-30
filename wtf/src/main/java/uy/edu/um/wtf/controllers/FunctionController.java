@@ -14,6 +14,7 @@ import uy.edu.um.wtf.serivces.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,6 +63,16 @@ public class FunctionController {
             return ResponseEntity.ok("Funcion agregada correctamente");
         } catch (InvalidInformation e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/obtenerTodas")
+    public ResponseEntity<?> obtenerTodas() {
+        try {
+            List<Function> funciones = functionService.obtenerTodas();
+            return new ResponseEntity<>(funciones, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

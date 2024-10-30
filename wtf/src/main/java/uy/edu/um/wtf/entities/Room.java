@@ -1,4 +1,5 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class Room implements Serializable{
     @JoinColumn(name = "BRANCH_ID", nullable = false)
     private Branch branch;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     private List<Function> functions = new LinkedList<Function>();

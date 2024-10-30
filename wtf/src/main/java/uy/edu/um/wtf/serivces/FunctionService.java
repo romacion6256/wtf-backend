@@ -6,6 +6,8 @@ import uy.edu.um.wtf.entities.Function;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.FunctionRepository;
 
+import java.util.List;
+
 @Service
 public class FunctionService {
 
@@ -35,6 +37,10 @@ public class FunctionService {
             throw new InvalidInformation("La funcion ya existe");
         }
         return functionRepository.save(funcion);
+    }
+
+    public List<Function> obtenerTodas () {
+        return functionRepository.findAll();
     }
 
 }
