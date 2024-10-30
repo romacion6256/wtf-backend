@@ -9,6 +9,10 @@ import uy.edu.um.wtf.exceptions.ExistingUser;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.UserRepository;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -80,6 +84,57 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findOneById(id).orElse(null);
+    }
+
+    public void actualizarUsuario(Long id, Map<String, String> cambios) {
+
+        User usuario = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + id));
+
+        cambios.forEach((campo, valor) -> {
+            switch (campo) {
+                case "nombreUsuario":
+                    usuario.setUserName(valor);
+                    break;
+                case "contraseña":
+                    usuario.setPassword(valor);
+                    break;
+                case "nombre":
+                    usuario.setName(valor);
+                    break;
+                case "apellido":
+                    usuario.setSurname(valor);
+                    break;
+                case "email":
+                    if (!validEmail(valor)) {
+                        throw new IllegalArgumentException("Email inválido");
+                    }
+                    usuario.setEmail(valor);
+                    break;
+                case "telefono":
+                    if (valor.length()!=9) {
+                        throw new IllegalArgumentException("Número de teléfono inválido");
+                    }
+                    usuario.setPhoneNumber(Long.valueOf(valor));
+                    break;
+                case "direccion":
+                    usuario.setAdress(valor);
+                    break;
+                case "documento":
+                    if (valor.length()!=8) {
+                        throw new IllegalArgumentException("Número de documento inválido");
+                    }
+                    usuario.setDocument(Long.valueOf(valor));
+                    break;
+                case "fechaNacimiento":
+                    usuario.setBirthDate(LocalDate.parse(valor));
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Campo no válido: " + campo);
+            }
+        });
+        userRepository.save(usuario);
     }
 
 }

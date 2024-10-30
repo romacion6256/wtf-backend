@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "USERS")
@@ -41,7 +41,7 @@ public class User implements Serializable{
 
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTH_DATE")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "PHONE_NUMBER")
     private Long phoneNumber;
