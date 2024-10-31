@@ -1,4 +1,5 @@
 package uy.edu.um.wtf.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Card implements Serializable{
 
     // Relación uno a uno inversa con la entidad Client
     @OneToOne(mappedBy = "card")
+    @JsonIgnore
     private Client client;
 
 }
