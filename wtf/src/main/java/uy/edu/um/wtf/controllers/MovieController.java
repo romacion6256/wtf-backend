@@ -81,4 +81,14 @@ public class MovieController {
         }
 
     }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<String> eliminarPelicula(@PathVariable Long id) {
+        try {
+            movieService.eliminarPelicula(id);
+            return new ResponseEntity<>("Película eliminada correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar la película: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

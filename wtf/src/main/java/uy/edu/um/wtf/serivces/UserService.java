@@ -93,16 +93,16 @@ public class UserService {
 
         cambios.forEach((campo, valor) -> {
             switch (campo) {
-                case "nombreUsuario":
+                case "userName":
                     usuario.setUserName(valor);
                     break;
-                case "contraseña":
+                case "password":
                     usuario.setPassword(valor);
                     break;
-                case "nombre":
+                case "name":
                     usuario.setName(valor);
                     break;
-                case "apellido":
+                case "surname":
                     usuario.setSurname(valor);
                     break;
                 case "email":
@@ -111,22 +111,22 @@ public class UserService {
                     }
                     usuario.setEmail(valor);
                     break;
-                case "telefono":
+                case "phoneNumber":
                     if (valor.length()!=9) {
                         throw new IllegalArgumentException("Número de teléfono inválido");
                     }
                     usuario.setPhoneNumber(Long.valueOf(valor));
                     break;
-                case "direccion":
+                case "adress":
                     usuario.setAdress(valor);
                     break;
-                case "documento":
+                case "document":
                     if (valor.length()!=8) {
                         throw new IllegalArgumentException("Número de documento inválido");
                     }
                     usuario.setDocument(Long.valueOf(valor));
                     break;
-                case "fechaNacimiento":
+                case "birthDate":
                     usuario.setBirthDate(LocalDate.parse(valor));
                     break;
 
