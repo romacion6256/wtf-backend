@@ -3,10 +3,12 @@ package uy.edu.um.wtf.serivces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uy.edu.um.wtf.entities.Admin;
+import uy.edu.um.wtf.entities.Card;
 import uy.edu.um.wtf.entities.Client;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.exceptions.ExistingUser;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
+import uy.edu.um.wtf.repository.CardRepository;
 import uy.edu.um.wtf.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
     public void addClient(Client client) throws InvalidInformation, ExistingUser {
         if (userRepository.findOneByEmail(client.getEmail()).isPresent()) {
@@ -136,6 +141,30 @@ public class UserService {
             }
         });
         userRepository.save(usuario);
+    }
+
+    public void assignCardToClient(Long clientId, Card card) {
+        // Busca al cliente por su ID
+        Client client = (Client) userRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + clientId));
+
+        Card existingCard = client.getCard();
+        // Verifica si ya tiene una tarjeta asociada
+        if (existingCard != null) {
+
+            throw new RuntimeException("El cliente ya tiene una tarjeta asignada.");
+        }
+
+        // Valida la tarjeta y la guarda si es necesario
+        if (cardRepository.findByCardNumber(card.getCardNumber()).isEmpty()) {
+            cardRepository.save(card);
+        }
+
+        // Asocia la tarjeta al cliente
+        client.setCard(card);
+
+        // Guarda los cambios en el cliente
+        userRepository.save(client);
     }
 
 }

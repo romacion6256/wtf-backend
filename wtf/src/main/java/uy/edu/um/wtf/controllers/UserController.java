@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uy.edu.um.wtf.entities.Admin;
+import uy.edu.um.wtf.entities.Card;
 import uy.edu.um.wtf.entities.Snack;
 import uy.edu.um.wtf.entities.User;
 import uy.edu.um.wtf.serivces.UserService;
@@ -38,6 +39,19 @@ public class UserController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/{clientId}/assign-card")
+    public ResponseEntity<String> assignCard(
+            @PathVariable Long clientId,
+            @RequestBody Card card
+    ) {
+        try {
+            userService.assignCardToClient(clientId, card);
+            return ResponseEntity.ok("Tarjeta asignada al cliente con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al asignar la tarjeta: " + e.getMessage());
         }
     }
 }
