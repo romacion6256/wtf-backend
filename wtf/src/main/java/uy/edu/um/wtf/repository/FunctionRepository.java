@@ -22,4 +22,8 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
 
     @Query("SELECT f FROM Function f WHERE f.movie.id = :movieId AND f.room.branch.branchName = :branchName")
     List<Function> findByMovieAndBranch(@Param("movieId") Long movieId, @Param("branchName") String branchName);
+
+    @Query("SELECT f FROM Function f WHERE f.movie.id = :movieId AND f.room.branch.branchName = :branchName AND f.room.number = :roomNumber")
+    List<Function> findByMovieAndBranchAndRoom(@Param("movieId") Long movieId, @Param("branchName") String branchName, @Param("roomNumber") int roomNumber);
+
 }

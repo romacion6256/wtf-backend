@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import uy.edu.um.wtf.entities.*;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.BranchRepository;
+import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.MovieRepository;
 import uy.edu.um.wtf.repository.RoomRepository;
 import uy.edu.um.wtf.serivces.FunctionService;
@@ -14,8 +15,11 @@ import uy.edu.um.wtf.serivces.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/function")
@@ -36,6 +40,9 @@ public class FunctionController {
 
     @Autowired
     private BranchRepository branchRepository;
+
+    @Autowired
+    private FunctionRepository functionRepository;
 
     @PostMapping("/agregarFuncion/{idAdmin}")
     public ResponseEntity<String> agregarFuncion(@PathVariable Long idAdmin ,@RequestBody Map<String, String> payload) throws InvalidInformation {
@@ -85,4 +92,33 @@ public class FunctionController {
             return new ResponseEntity<>("Error al eliminar la funcion: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/obtenerFechasDisponibles/{movieName}/{branchName}/{roomNumber}")
+    public ResponseEntity<List<String>> obtenerFechasDisponibles(@PathVariable String movieName, @PathVariable String branchName, @PathVariable int roomNumber) {
+        Optional<Movie> movie = movieRepository.findByMovieName(movieName);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("Película no encontrada"));
+        }
+
+        Long movieId = movie.get().getIdMovie();
+
+        List<Function> functions = functionRepository.findByMovieAndBranchAndRoom(movieId, branchName, roomNumber);
+        System.out.println("Funciones encontradas: " + functions.size()); // Verificación
+
+        if (functions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay funciones disponibles para los parámetros especificados"));
+        }
+
+        List<String> dates = functions.stream()
+                .map(function -> function.getDate().toString()) // Conversión de fecha a String
+                .distinct()
+                .collect(Collectors.toList());
+
+        System.out.println("Fechas encontradas: " + dates); // Verificación
+
+        return ResponseEntity.ok(dates);
+    }
+
 }
