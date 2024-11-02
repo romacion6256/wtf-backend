@@ -1,12 +1,15 @@
 package uy.edu.um.wtf.serivces;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uy.edu.um.wtf.entities.Function;
 import uy.edu.um.wtf.entities.Snack;
 import uy.edu.um.wtf.repository.SnackRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SnackService {
@@ -36,5 +39,14 @@ public class SnackService {
     public List<Snack> listarSnacks() {
         List<Snack> snacks = snackRepository.findAll();
         return snacks;
+    }
+
+    public void eliminarSnack(Long id) {
+        Optional<Snack> snack = snackRepository.findById(id);
+        if (snack.isPresent()) {
+            snackRepository.delete(snack.get());
+        } else {
+            throw new EntityNotFoundException("La película con ID " + id + " no existe.");
+        }
     }
 }

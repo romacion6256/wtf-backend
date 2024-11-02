@@ -75,4 +75,14 @@ public class FunctionController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<String> eliminarFuncion(@PathVariable Long id) {
+        try {
+            functionService.eliminarFuncion(id);
+            return new ResponseEntity<>("Funcion eliminada correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar la funcion: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

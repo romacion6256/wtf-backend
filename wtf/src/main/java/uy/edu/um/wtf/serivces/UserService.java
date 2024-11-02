@@ -109,6 +109,7 @@ public class UserService {
                     if (!validEmail(valor)) {
                         throw new IllegalArgumentException("Email inválido");
                     }
+
                     usuario.setEmail(valor);
                     break;
                 case "phoneNumber":

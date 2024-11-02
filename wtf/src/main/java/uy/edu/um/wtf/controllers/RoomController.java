@@ -31,6 +31,31 @@ public class RoomController {
     @Autowired
     private FunctionRepository functionRepository;
 
+    @GetMapping("/obtenerSalas/{branchName}")
+    public ResponseEntity<List<String>> obtenerSalas(@PathVariable String branchName) {
+        // Buscar la sucursal por nombre
+        Optional<Branch> branch = Optional.ofNullable(branchRepository.findByBranchName(branchName));
+        if (branch.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("Sucursal no encontrada"));
+        }
+
+        // Obtener las salas de la sucursal
+        List<Room> rooms = branch.get().getRooms();
+
+        // Verificar si la sucursal tiene salas
+        if (rooms.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay salas en esta sucursal"));
+        }
+
+        // Convertir los números o nombres de las salas a String
+        List<String> roomNames = rooms.stream()
+                .map(room -> String.valueOf(room.getNumber())) // o room.getName() si tienes nombres de sala
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(roomNames);
+    }
     @GetMapping("/obtenerSalasDisponibles/{movieName}/{branchName}")
     public ResponseEntity<List<String>> obtenerSalasDisponibles(@PathVariable String movieName, @PathVariable String branchName) {
         // Buscar la película por nombre

@@ -1,12 +1,15 @@
 package uy.edu.um.wtf.serivces;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uy.edu.um.wtf.entities.Function;
+import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.FunctionRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FunctionService {
@@ -43,4 +46,12 @@ public class FunctionService {
         return functionRepository.findAll();
     }
 
+    public void eliminarFuncion(Long id) {
+        Optional<Function> funcion = functionRepository.findByIdFunction(id);
+        if (funcion.isPresent()) {
+            functionRepository.delete(funcion.get());
+        } else {
+            throw new EntityNotFoundException("La funcion con ID " + id + " no existe.");
+        }
+    }
 }

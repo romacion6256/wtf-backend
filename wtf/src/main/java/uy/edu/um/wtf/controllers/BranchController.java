@@ -8,8 +8,10 @@ import uy.edu.um.wtf.entities.Branch;
 import uy.edu.um.wtf.entities.Function;
 import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.entities.Room;
+import uy.edu.um.wtf.repository.BranchRepository;
 import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.MovieRepository;
+import uy.edu.um.wtf.serivces.BranchService;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +28,14 @@ public class BranchController {
 
     @Autowired
     private FunctionRepository functionRepository;
+    @Autowired
+    private BranchService branchService;
 
+    @GetMapping("/obtenerTodas")
+    public List<Branch> obtenerTodas () {
+        List<Branch> branches = branchService.obtenerTodasLasSucursales();
+        return new ResponseEntity<>(branches, HttpStatus.OK).getBody();
+    }
     @GetMapping("/obtenerSucursales/{movieName}")
     public ResponseEntity<List<String>> obtenerSucursalesPorPelicula(@PathVariable String movieName) {
         Optional<Movie> movie = movieRepository.findByMovieName(movieName);

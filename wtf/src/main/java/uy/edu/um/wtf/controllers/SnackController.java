@@ -48,5 +48,15 @@ public class SnackController {
         }
     }
 
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<String> eliminarSnack(@PathVariable Long id) {
+        try {
+            snackService.eliminarSnack(id);
+            return new ResponseEntity<>("Snack eliminado correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar snack: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
