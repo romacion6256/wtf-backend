@@ -24,6 +24,11 @@ public class ReservationService {
         if (id == null) {
             throw new IllegalArgumentException("El id de la reserva no puede ser nulo");
         }
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+        // Limpiar la lista de snacks antes de eliminar
+        reservation.getSnacks().clear();
+        reservationRepository.save(reservation);
         reservationRepository.deleteById(id);
     }
 
