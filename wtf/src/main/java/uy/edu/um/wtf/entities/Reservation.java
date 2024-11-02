@@ -21,6 +21,7 @@ public class Reservation implements Serializable {
     @Column(name = "ID")
     private Long idReservation;
 
+    @JsonIgnore
     @Column(name = "STATUS")
     private String status;
 
@@ -33,6 +34,7 @@ public class Reservation implements Serializable {
     @Column(name = "COLUMN_SEAT")
     private int columnSeat;
 
+    @JsonIgnore
     @Column(name = "RESERVATION_DATE")
     @Temporal(TemporalType.DATE)
     private Date reservationDate;
@@ -42,7 +44,7 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "ID_CLIENT")
     private Client client; // Relación con Cliente
 
-    @JsonIgnoreProperties({"reservations", "admin", "movie", "room"})
+    @JsonIgnoreProperties({"reservations", "admin"})
     @ManyToOne
     @JoinColumn(name = "ID_FUNCTION")
     private Function function; // Relación con Funcion
