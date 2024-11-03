@@ -1,6 +1,7 @@
 package uy.edu.um.wtf.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -119,6 +120,36 @@ public class FunctionController {
         System.out.println("Fechas encontradas: " + dates); // Verificación
 
         return ResponseEntity.ok(dates);
+    }
+
+    @GetMapping("/obtenerHorasDisponibles/{movieName}/{branchName}/{roomNumber}/{date}")
+    public ResponseEntity<List<String>> obtenerHorasDisponibles(
+            @PathVariable String movieName,
+            @PathVariable String branchName,
+            @PathVariable int roomNumber,
+            @PathVariable String date) {
+
+        Optional<Movie> movie = movieRepository.findByMovieName(movieName);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("Película no encontrada"));
+        }
+
+        Long movieId = movie.get().getIdMovie();
+        LocalDate fecha = LocalDate.parse(date); // Convertir la fecha de String a LocalDate
+
+        List<Function> functions = functionRepository.findByMovieRoomAndDate(movieId, branchName, roomNumber, fecha);
+
+        if (functions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay horas disponibles"));
+        }
+
+        List<String> horasDisponibles = functions.stream()
+                .map(function -> function.getTime().toString())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(horasDisponibles);
     }
 
 }
