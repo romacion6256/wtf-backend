@@ -6,14 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uy.edu.um.wtf.entities.*;
 import uy.edu.um.wtf.repository.FunctionRepository;
+import uy.edu.um.wtf.repository.MovieRepository;
+import uy.edu.um.wtf.repository.ReservationRepository;
 import uy.edu.um.wtf.repository.SnackRepository;
 import uy.edu.um.wtf.serivces.ReservationService;
 import uy.edu.um.wtf.serivces.UserService;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,7 +26,13 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
     private FunctionRepository functionRepository;
+
+    @Autowired
+    private MovieRepository movieRepository;
 
     @Autowired
     private UserService userService;
@@ -84,5 +91,49 @@ public class ReservationController {
             return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
         }
     }
+
+    @GetMapping("/asientosReservados")
+    public ResponseEntity<List<Map<String, Integer>>> obtenerAsientosReservados(
+            @RequestParam String movieName,
+            @RequestParam String branchName,
+            @RequestParam int roomNumber,
+            @RequestParam String date,
+            @RequestParam String time,
+            @RequestParam String format,
+            @RequestParam boolean subtitled) {
+
+        // Buscar la película por nombre
+        Optional<Movie> movieOpt = movieRepository.findByMovieName(movieName);
+        if (movieOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        Long movieId = movieOpt.get().getIdMovie();
+        LocalDate localDate = LocalDate.parse(date);
+        LocalTime localTime = LocalTime.parse(time);
+
+        // Busca la función que coincide con todos los parámetros
+        List<Function> funciones = functionRepository.findByParams(
+                movieId, branchName, roomNumber, localDate, localTime, format, subtitled);
+
+        if (funciones.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        // Obtener las reservas de la función encontrada
+        List<Reservation> reservas = reservationRepository.findByFunction(funciones.get(0));
+
+        // Recopilar asientos reservados
+        List<Map<String, Integer>> asientosReservados = new ArrayList<>();
+        for (Reservation reserva : reservas) {
+            Map<String, Integer> asiento = new HashMap<>();
+            asiento.put("row", reserva.getRowSeat());
+            asiento.put("column", reserva.getColumnSeat());
+            asientosReservados.add(asiento);
+        }
+
+        return ResponseEntity.ok(asientosReservados);
+    }
+
 
 }
