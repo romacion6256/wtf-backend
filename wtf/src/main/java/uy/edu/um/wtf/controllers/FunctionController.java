@@ -152,4 +152,42 @@ public class FunctionController {
         return ResponseEntity.ok(horasDisponibles);
     }
 
+    @GetMapping("/obtenerFormatosDisponibles/{movieName}/{branchName}/{roomNumber}/{date}/{time}")
+    public ResponseEntity<List<String>> obtenerFormatosDisponibles(
+            @PathVariable String movieName,
+            @PathVariable String branchName,
+            @PathVariable int roomNumber,
+            @PathVariable String date,
+            @PathVariable String time) {
+
+        Optional<Movie> movie = movieRepository.findByMovieName(movieName);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("Película no encontrada"));
+        }
+
+        Long movieId = movie.get().getIdMovie();
+        LocalDate localDate = LocalDate.parse(date); // Convertir fecha a LocalDate
+        LocalTime localTime = LocalTime.parse(time); // Convertir hora a LocalTime
+
+        // Buscar todas las funciones que coincidan con los parámetros especificados
+        List<Function> functions = functionRepository.findByMovieBranchRoomDateAndTime(movieId, branchName, roomNumber, localDate, localTime);
+
+        if (functions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay formatos disponibles para los parámetros especificados"));
+        }
+
+        // Extraer y eliminar formatos duplicados
+        List<String> formatos = functions.stream()
+                .map(Function::getFormat) // Extraer el formato de cada función
+                .distinct() // Eliminar duplicados
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(formatos);
+    }
+
+
+
+
 }
