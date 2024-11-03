@@ -187,6 +187,43 @@ public class FunctionController {
         return ResponseEntity.ok(formatos);
     }
 
+    @GetMapping("/obtenerSubtitulosDisponibles/{movieName}/{branchName}/{roomNumber}/{date}/{time}/{format}")
+    public ResponseEntity<List<String>> obtenerSubtitulosDisponibles(
+            @PathVariable String movieName,
+            @PathVariable String branchName,
+            @PathVariable int roomNumber,
+            @PathVariable String date,
+            @PathVariable String time,
+            @PathVariable String format) {
+
+        // Buscar la película por nombre
+        Optional<Movie> movie = movieRepository.findByMovieName(movieName);
+        if (movie.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("Película no encontrada"));
+        }
+
+        Long movieId = movie.get().getIdMovie();
+        LocalDate localDate = LocalDate.parse(date);
+        LocalTime localTime = LocalTime.parse(time);
+
+        // Obtener las opciones de subtitulado
+        List<Boolean> subtitledOptions = functionRepository.findSubtitledByMovieBranchRoomDateTimeAndFormat(
+                movieId, branchName, roomNumber, localDate, localTime, format);
+
+        if (subtitledOptions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay opciones de subtitulado disponibles para los parámetros especificados"));
+        }
+
+        // Convertir a "Sí" o "No" y eliminar duplicados
+        List<String> subtitulos = subtitledOptions.stream()
+                .map(subtitled -> subtitled ? "Sí" : "No")
+                .distinct()
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(subtitulos);
+    }
 
 
 
