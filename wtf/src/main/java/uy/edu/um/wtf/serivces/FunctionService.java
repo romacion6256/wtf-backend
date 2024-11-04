@@ -8,6 +8,8 @@ import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.FunctionRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +55,14 @@ public class FunctionService {
         } else {
             throw new EntityNotFoundException("La funcion con ID " + id + " no existe.");
         }
+    }
+
+    public Long getFunctionId(Long movieId, String branchName, int roomNumber, LocalDate date, LocalTime time, String format, boolean subtitled) {
+        // Llama al repositorio para encontrar la función por sus detalles
+        Function function = functionRepository.findByDetails(movieId, branchName, roomNumber, date, time, format, subtitled);
+        if (function == null) {
+            throw new IllegalArgumentException("Función no encontrada con los parámetros proporcionados.");
+        }
+        return function.getIdFunction(); // Devuelve el ID de la función
     }
 }

@@ -60,36 +60,95 @@ public class ReservationController {
         }
     }
 
+//    @PostMapping("/crearReservaa/{idClient}")
+//    public ResponseEntity<?> crearReservaa(@PathVariable Long idClient, @RequestBody Map<String, String> payload) {
+//        String paymentMethod = payload.get("paymentMethod");
+//        int rowSeat = Integer.parseInt(payload.get("rowSeat"));
+//        int columnSeat = Integer.parseInt(payload.get("columnSeat"));
+//        Date reservationDate = new Date();
+//        Function funcion = functionRepository.findByIdFunction(Long.parseLong(payload.get("idFunction"))).orElseThrow(() -> new IllegalArgumentException("Funcion no encontrada"));
+//        User cliente = userService.getUserById(idClient);
+//        List<Snack> snacks = Arrays.stream(payload.get("snackIds").split(","))
+//                .map(Long::parseLong)
+//                .map(id -> snackRepository.findById(id)
+//                        .orElseThrow(() -> new IllegalArgumentException("Snack con ID " + id + " no encontrado")))
+//                .collect(Collectors.toList());
+//
+//        Reservation reservation = new Reservation();
+//        reservation.setStatus("Pendiente");
+//        reservation.setPaymentMethod(paymentMethod);
+//        reservation.setRowSeat(rowSeat);
+//        reservation.setColumnSeat(columnSeat);
+//        reservation.setReservationDate(reservationDate);
+//        reservation.setClient((Client) cliente);
+//        reservation.setFunction(funcion);
+//        reservation.setSnacks(snacks);
+//
+//        try {
+//            reservationService.crearReserva(reservation);
+//            return ResponseEntity.ok("Reserva creada exitosamente con ID: " + reservation.getIdReservation());
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
+//        }
+//    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/crearReserva/{idClient}")
-    public ResponseEntity<?> crearReserva(@PathVariable Long idClient, @RequestBody Map<String, String> payload) {
-        String paymentMethod = payload.get("paymentMethod");
-        int rowSeat = Integer.parseInt(payload.get("rowSeat"));
-        int columnSeat = Integer.parseInt(payload.get("columnSeat"));
+    public ResponseEntity<?> crearReserva(@PathVariable Long idClient, @RequestBody Map<String, Object> payload) {
+        String paymentMethod = (String) payload.get("paymentMethod");
         Date reservationDate = new Date();
-        Function funcion = functionRepository.findByIdFunction(Long.parseLong(payload.get("idFunction"))).orElseThrow(() -> new IllegalArgumentException("Funcion no encontrada"));
+
+        // Obtener la función
+        Long idFunction = ((Number) payload.get("idFunction")).longValue();  // Cambiado aquí
+        Function funcion = functionRepository.findByIdFunction(idFunction)
+                .orElseThrow(() -> new IllegalArgumentException("Función no encontrada"));
+
+        // Obtener el cliente
         User cliente = userService.getUserById(idClient);
-        List<Snack> snacks = Arrays.stream(payload.get("snackIds").split(","))
-                .map(Long::parseLong)
-                .map(id -> snackRepository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("Snack con ID " + id + " no encontrado")))
-                .collect(Collectors.toList());
 
-        Reservation reservation = new Reservation();
-        reservation.setStatus("Pendiente");
-        reservation.setPaymentMethod(paymentMethod);
-        reservation.setRowSeat(rowSeat);
-        reservation.setColumnSeat(columnSeat);
-        reservation.setReservationDate(reservationDate);
-        reservation.setClient((Client) cliente);
-        reservation.setFunction(funcion);
-        reservation.setSnacks(snacks);
-
-        try {
-            reservationService.crearReserva(reservation);
-            return ResponseEntity.ok("Reserva creada exitosamente con ID: " + reservation.getIdReservation());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
+        // Obtener la lista de snacks seleccionados
+        List<Snack> snacks = new ArrayList<>();
+        if (payload.containsKey("snackIds") && payload.get("snackIds") != null && !((String) payload.get("snackIds")).isEmpty()) {
+            snacks = Arrays.stream(((String) payload.get("snackIds")).split(","))
+                    .map(Long::parseLong)
+                    .map(id -> snackRepository.findById(id)
+                            .orElseThrow(() -> new IllegalArgumentException("Snack con ID " + id + " no encontrado")))
+                    .collect(Collectors.toList());
         }
+        // Obtener la lista de asientos seleccionados
+        List<Map<String, Integer>> seats = (List<Map<String, Integer>>) payload.get("seats");
+
+        // Validar si hay asientos seleccionados
+        if (seats == null || seats.isEmpty()) {
+            return ResponseEntity.badRequest().body("Debe seleccionar al menos un asiento.");
+        }
+
+        // Crear una reserva por cada asiento
+        List<Long> reservationIds = new ArrayList<>();
+        for (Map<String, Integer> seat : seats) {
+            int rowSeat = seat.get("rowSeat");
+            int columnSeat = seat.get("columnSeat");
+
+            // Crear una nueva instancia de Reservation para cada asiento
+            Reservation reservation = new Reservation();
+            reservation.setStatus("Pendiente");
+            reservation.setPaymentMethod(paymentMethod);
+            reservation.setRowSeat(rowSeat);
+            reservation.setColumnSeat(columnSeat);
+            reservation.setReservationDate(reservationDate);
+            reservation.setClient((Client) cliente);
+            reservation.setFunction(funcion);
+            reservation.setSnacks(snacks);
+
+            try {
+                reservationService.crearReserva(reservation);
+                reservationIds.add(reservation.getIdReservation()); // Guarda el ID de la reserva creada
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
+            }
+        }
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "Reservas creadas exitosamente con IDs: " + reservationIds));
     }
 
     @GetMapping("/asientosReservados")

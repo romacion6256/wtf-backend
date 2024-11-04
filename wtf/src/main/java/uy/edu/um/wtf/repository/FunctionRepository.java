@@ -59,4 +59,19 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
             @Param("format") String format,
             @Param("subtitled") boolean subtitled);
 
+    @Query("SELECT f FROM Function f WHERE f.movie.id = :movieId " +
+            "AND f.room.branch.branchName = :branchName " +
+            "AND f.room.number = :roomNumber " +
+            "AND f.date = :date " +
+            "AND f.time = :time " +
+            "AND f.format = :format " +
+            "AND f.subtitled = :subtitled")
+    Function findByDetails(@Param("movieId") Long movieId,
+                           @Param("branchName") String branchName,
+                           @Param("roomNumber") int roomNumber,
+                           @Param("date") LocalDate date,
+                           @Param("time") LocalTime time,
+                           @Param("format") String format,
+                           @Param("subtitled") boolean subtitled);
+
 }

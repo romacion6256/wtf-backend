@@ -225,6 +225,36 @@ public class FunctionController {
         return ResponseEntity.ok(subtitulos);
     }
 
+    @GetMapping("/obtenerIdFuncion")
+    public ResponseEntity<Long> obtenerIdFuncion(
+            @RequestParam String movieName,
+            @RequestParam String branchName,
+            @RequestParam int roomNumber,
+            @RequestParam String date,
+            @RequestParam String time,
+            @RequestParam String format,
+            @RequestParam boolean subtitled) {
+
+        // Buscar la película por nombre
+        Optional<Movie> movieOpt = movieRepository.findByMovieName(movieName);
+        if (movieOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // No se encontró la película
+        }
+
+        Long movieId = movieOpt.get().getIdMovie();
+        LocalDate localDate = LocalDate.parse(date);
+        LocalTime localTime = LocalTime.parse(time);
+
+        // Busca la función que coincide con todos los parámetros
+        Function funcion = functionRepository.findByDetails(
+                movieId, branchName, roomNumber, localDate, localTime, format, subtitled);
+
+        if (funcion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // No se encontró la función
+        }
+
+        return ResponseEntity.ok(funcion.getIdFunction()); // Devuelve el ID de la función
+    }
 
 
 }
