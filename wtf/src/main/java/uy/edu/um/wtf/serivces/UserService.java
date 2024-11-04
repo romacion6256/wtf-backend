@@ -148,11 +148,12 @@ public class UserService {
         Client client = (Client) userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + clientId));
 
+
         Card existingCard = client.getCard();
+        client.setCard(null);
         // Verifica si ya tiene una tarjeta asociada
         if (existingCard != null) {
-
-            throw new RuntimeException("El cliente ya tiene una tarjeta asignada.");
+            cardRepository.deleteById(existingCard.getCardNumber());
         }
 
         // Valida la tarjeta y la guarda si es necesario
