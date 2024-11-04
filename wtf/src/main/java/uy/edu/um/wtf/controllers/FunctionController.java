@@ -218,7 +218,7 @@ public class FunctionController {
 
         // Convertir a "Sí" o "No" y eliminar duplicados
         List<String> subtitulos = subtitledOptions.stream()
-                .map(subtitled -> subtitled ? "Sí" : "No")
+                .map(subtitled -> subtitled ? "Si" : "No")
                 .distinct()
                 .collect(Collectors.toList());
 
