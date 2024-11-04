@@ -21,7 +21,7 @@ public class Reservation implements Serializable {
     @Column(name = "ID")
     private Long idReservation;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "STATUS")
     private String status;
 

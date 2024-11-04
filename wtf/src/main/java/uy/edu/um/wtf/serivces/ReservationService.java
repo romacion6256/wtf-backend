@@ -2,9 +2,13 @@ package uy.edu.um.wtf.serivces;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uy.edu.um.wtf.entities.Function;
 import uy.edu.um.wtf.entities.Reservation;
+import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.ReservationRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -12,6 +16,8 @@ public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private FunctionRepository functionRepository;
 
     public List<Reservation> obtenerReservasPorClienteId(Long clientId) {
         if (clientId == null) {
@@ -45,9 +51,26 @@ public class ReservationService {
         if (reserva.getPaymentMethod() == null || reserva.getPaymentMethod().isEmpty()) {
             throw new IllegalArgumentException("El metodo de pago de la reserva no puede ser nulo o vacio");
         }
-        if (!reservationRepository.findByColumnSeatAndRowSeat(reserva.getColumnSeat(), reserva.getRowSeat()).isEmpty()) {
-            throw new IllegalArgumentException("El asiento ya esta ocupado");
+        // Verificar si el asiento ya está ocupado en la misma función
+        if (!reservationRepository.findByFunction_IdFunctionAndColumnSeatAndRowSeat(
+                reserva.getFunction().getIdFunction(), reserva.getColumnSeat(), reserva.getRowSeat()).isEmpty()) {
+            throw new IllegalArgumentException("El asiento ya está ocupado en esta función");
         }
         reservationRepository.save(reserva);
+    }
+
+    public void actualizarReservasPendientes() {
+        List<Reservation> reservasPendientes = reservationRepository.findByStatus("Pendiente");
+        LocalDate fechaActual = LocalDate.now();
+        LocalTime horaActual = LocalTime.now();
+
+        for (Reservation reserva : reservasPendientes) {
+            Function funcion = reserva.getFunction();
+            if (funcion.getDate().isBefore(fechaActual) ||
+                    (funcion.getDate().isEqual(fechaActual) && funcion.getTime().isBefore(horaActual))) {
+                reserva.setStatus("Finalizada");
+                reservationRepository.save(reserva);
+            }
+        }
     }
 }

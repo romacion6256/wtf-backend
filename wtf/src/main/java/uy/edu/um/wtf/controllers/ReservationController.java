@@ -194,5 +194,11 @@ public class ReservationController {
         return ResponseEntity.ok(asientosReservados);
     }
 
+    @GetMapping("/actualizarReservas")
+    public ResponseEntity<String> actualizarReservas() {
+        reservationService.actualizarReservasPendientes();
+        return ResponseEntity.ok("Reservas actualizadas");
+    }
+
 
 }

@@ -13,4 +13,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByColumnSeatAndRowSeat (int columnSeat, int rowSeat);
     List<Reservation> findByFunction(Function function);
 
+    List<Reservation> findByStatus(String status);
+
+    List<Reservation> findByFunction_IdFunctionAndColumnSeatAndRowSeat(Long idFunction, int columnSeat, int rowSeat);
+
+
 }
