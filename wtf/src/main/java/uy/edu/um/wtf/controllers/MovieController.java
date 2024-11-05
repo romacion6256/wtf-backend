@@ -68,20 +68,6 @@ public class MovieController {
         }
     }
 
-    @PostMapping("/calificar/{idPelicula}")
-    public ResponseEntity<String> calificarPelicula(@PathVariable Long idPelicula, @RequestBody Map<String, String> payload) {
-        float puntuacion = Float.parseFloat(payload.get("puntuacion"));
-        Movie movie = movieService.getMovieById(idPelicula);
-        try {
-            movie.setPuntuacion(puntuacion);
-            movieRepository.save(movie);
-            return ResponseEntity.ok("Pelicula calificada correctamente");
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarPelicula(@PathVariable Long id) {
         try {

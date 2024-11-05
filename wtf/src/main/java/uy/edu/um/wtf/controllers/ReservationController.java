@@ -200,5 +200,19 @@ public class ReservationController {
         return ResponseEntity.ok("Reservas actualizadas");
     }
 
+    @PatchMapping("/calificar/{idReserva}")
+    public ResponseEntity<String> calificarReserva(@PathVariable Long idReserva, @RequestBody Map<String, String> payload) {
+        float puntuacion = Float.parseFloat(payload.get("puntuacion"));
+        Reservation reserva = reservationRepository.findById(idReserva)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+        try {
+            reserva.setRating(puntuacion);
+            reservationRepository.save(reserva);
+            return ResponseEntity.ok("Reserva calificada correctamente");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 
 }

@@ -39,6 +39,9 @@ public class Reservation implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date reservationDate;
 
+    @Column(name = "RATING")
+    private Float rating;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ID_CLIENT")
