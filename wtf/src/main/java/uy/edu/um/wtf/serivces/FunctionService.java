@@ -57,12 +57,16 @@ public class FunctionService {
         }
     }
 
-    public Long getFunctionId(Long movieId, String branchName, int roomNumber, LocalDate date, LocalTime time, String format, boolean subtitled) {
-        // Llama al repositorio para encontrar la función por sus detalles
-        Function function = functionRepository.findByDetails(movieId, branchName, roomNumber, date, time, format, subtitled);
-        if (function == null) {
-            throw new IllegalArgumentException("Función no encontrada con los parámetros proporcionados.");
-        }
-        return function.getIdFunction(); // Devuelve el ID de la función
-    }
+//    public Long getFunctionId(Long movieId, String branchName, int roomNumber, LocalDate date, LocalTime time, String format, boolean subtitled) {
+//        // Llama al repositorio para encontrar la función por sus detalles
+//        Function function = functionRepository.findByDetails(movieId, branchName, roomNumber, date, time, format, subtitled);
+//        if (function == null) {
+//            throw new IllegalArgumentException("Función no encontrada con los parámetros proporcionados.");
+//        }
+//        return function.getIdFunction(); // Devuelve el ID de la función
+//    }
+
+//    public List<Long> obtenerIdsDeFuncionesPorPelicula(Long movieId) {
+//        return functionRepository.findDistinctFunctionIdsByMovieId(movieId);
+//    }
 }

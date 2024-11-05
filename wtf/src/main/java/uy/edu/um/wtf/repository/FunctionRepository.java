@@ -74,4 +74,10 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
                            @Param("format") String format,
                            @Param("subtitled") boolean subtitled);
 
+
+    @Query("SELECT DISTINCT f.idFunction FROM Function f WHERE f.movie.idMovie = :movieId")
+    List<Long> findDistinctFunctionIdsByMovieId(@Param("movieId") Long movieId);
+
+
+
 }

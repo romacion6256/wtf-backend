@@ -77,4 +77,10 @@ public class MovieController {
             return new ResponseEntity<>("Error al eliminar la película: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/actualizarPuntuaciones")
+    public ResponseEntity<Void> actualizarPuntuaciones() {
+        movieService.actualizarPuntuacionesDePeliculas();
+        return ResponseEntity.ok().build();
+    }
 }
