@@ -14,6 +14,7 @@ import uy.edu.um.wtf.repository.RoomRepository;
 import uy.edu.um.wtf.serivces.FunctionService;
 import uy.edu.um.wtf.serivces.UserService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -57,6 +58,7 @@ public class FunctionController {
         int sala = Integer.parseInt(payload.get("sala"));
         Room room = roomRepository.findByBranchAndNumber(branch, sala).orElseThrow(() -> new InvalidInformation("La sala no existe"));
         User administrador = userService.getUserById(idAdmin);
+        BigDecimal price = new BigDecimal(payload.get("price"));
 
         Function funcion = new Function();
         funcion.setFormat(format);
@@ -65,6 +67,7 @@ public class FunctionController {
         funcion.setTime(time);
         funcion.setMovie(movie);
         funcion.setRoom(room);
+        funcion.setPrice(price);
         funcion.setAdmin((Admin) administrador);
         try {
             functionService.agregarFuncion(funcion);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -33,6 +34,9 @@ public class Function implements Serializable{
 
     @Column(name = "TIME")
     private LocalTime time;
+
+    @Column(name = "PRICE")
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "MOVIE_ID")
