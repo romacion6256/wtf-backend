@@ -17,10 +17,7 @@ import uy.edu.um.wtf.serivces.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -229,7 +226,7 @@ public class FunctionController {
     }
 
     @GetMapping("/obtenerIdFuncion")
-    public ResponseEntity<Long> obtenerIdFuncion(
+    public ResponseEntity<Map<String, Object>> obtenerIdFuncion(
             @RequestParam String movieName,
             @RequestParam String branchName,
             @RequestParam int roomNumber,
@@ -256,7 +253,11 @@ public class FunctionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // No se encontró la función
         }
 
-        return ResponseEntity.ok(funcion.getIdFunction()); // Devuelve el ID de la función
+        Map<String, Object> response = new HashMap<>();
+        response.put("idFunction", funcion.getIdFunction());
+        response.put("price", funcion.getPrice());
+
+        return ResponseEntity.ok(response);
     }
 
 
