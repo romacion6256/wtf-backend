@@ -9,9 +9,11 @@ import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.MovieRepository;
 import uy.edu.um.wtf.repository.ReservationRepository;
 import uy.edu.um.wtf.repository.SnackRepository;
+import uy.edu.um.wtf.serivces.ReservationProfitService;
 import uy.edu.um.wtf.serivces.ReservationService;
 import uy.edu.um.wtf.serivces.UserService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -39,6 +41,9 @@ public class ReservationController {
 
     @Autowired
     private SnackRepository snackRepository;
+
+    @Autowired
+    private ReservationProfitService reservationProfitService;
 
     @GetMapping("/misReservas/{clientId}")
     public ResponseEntity<?> obtenerReservasPorCliente(@PathVariable Long clientId) {
@@ -98,8 +103,9 @@ public class ReservationController {
         String paymentMethod = (String) payload.get("paymentMethod");
         Date reservationDate = new Date();
 
+
         // Obtener la función
-        Long idFunction = ((Number) payload.get("idFunction")).longValue();  // Cambiado aquí
+        Long idFunction = Long.valueOf(String.valueOf(payload.get("idFunction")));  // Cambiado aquí
         Function funcion = functionRepository.findByIdFunction(idFunction)
                 .orElseThrow(() -> new IllegalArgumentException("Función no encontrada"));
 
@@ -122,6 +128,13 @@ public class ReservationController {
         if (seats == null || seats.isEmpty()) {
             return ResponseEntity.badRequest().body("Debe seleccionar al menos un asiento.");
         }
+
+        ReservationProfit reservationProfit = ReservationProfit.builder()
+                .clientId(idClient)
+                .functionId(idFunction)
+                .monto(new BigDecimal(String.valueOf(payload.get("monto")))).build();
+
+
 
         // Crear una reserva por cada asiento
         List<Long> reservationIds = new ArrayList<>();
@@ -146,6 +159,12 @@ public class ReservationController {
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
             }
+        }
+
+        try {
+            reservationProfitService.saveReservationProfit(reservationProfit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear la reserva con monto: " + e.getMessage());
         }
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Reservas creadas exitosamente con IDs: " + reservationIds));
