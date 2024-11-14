@@ -132,8 +132,9 @@ public class ReservationController {
         ReservationProfit reservationProfit = ReservationProfit.builder()
                 .clientId(idClient)
                 .functionId(idFunction)
-                .monto(new BigDecimal(String.valueOf(payload.get("monto")))).build();
-
+                .monto(new BigDecimal(String.valueOf(payload.get("monto"))))
+                .status("PAGADA")
+                .build();
 
 
         // Crear una reserva por cada asiento

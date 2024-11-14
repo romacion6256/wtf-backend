@@ -27,5 +27,8 @@ public class ReservationProfit {
 
     @Column(name = "MONTO")
     private BigDecimal monto;
+
+    @Column(name = "ESTADO")
+    private String status;
 }
 
