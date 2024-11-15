@@ -59,4 +59,8 @@ public class Reservation implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ID_SNACK")
     )
     private List<Snack> snacks; // Relación con Snacks (opcional)
+
+    @JsonIgnoreProperties("reservation")
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private ReservationProfit reservationProfit; // Relación con ReservationProfit
 }

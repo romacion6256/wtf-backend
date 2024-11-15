@@ -30,5 +30,9 @@ public class ReservationProfit {
 
     @Column(name = "ESTADO")
     private String status;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "RESERVATION_ID", referencedColumnName = "ID")
+    private Reservation reservation;
 }
 

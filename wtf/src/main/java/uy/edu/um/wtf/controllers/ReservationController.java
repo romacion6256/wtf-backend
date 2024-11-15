@@ -129,14 +129,6 @@ public class ReservationController {
             return ResponseEntity.badRequest().body("Debe seleccionar al menos un asiento.");
         }
 
-        ReservationProfit reservationProfit = ReservationProfit.builder()
-                .clientId(idClient)
-                .functionId(idFunction)
-                .monto(new BigDecimal(String.valueOf(payload.get("monto"))))
-                .status("PAGO")
-                .build();
-
-
         // Crear una reserva por cada asiento
         List<Long> reservationIds = new ArrayList<>();
         for (Map<String, Integer> seat : seats) {
@@ -154,18 +146,21 @@ public class ReservationController {
             reservation.setFunction(funcion);
             reservation.setSnacks(snacks);
 
+            ReservationProfit reservationProfit = ReservationProfit.builder()
+                    .clientId(idClient)
+                    .functionId(idFunction)
+                    .monto(new BigDecimal(String.valueOf(payload.get("monto"))))
+                    .status("PAGO")
+                    .reservation(reservation)
+                    .build();
+
             try {
                 reservationService.crearReserva(reservation);
                 reservationIds.add(reservation.getIdReservation()); // Guarda el ID de la reserva creada
+                reservationProfitService.saveReservationProfit(reservationProfit);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
             }
-        }
-
-        try {
-            reservationProfitService.saveReservationProfit(reservationProfit);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al crear la reserva con monto: " + e.getMessage());
         }
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Reservas creadas exitosamente con IDs: " + reservationIds));

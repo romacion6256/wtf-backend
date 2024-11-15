@@ -11,6 +11,8 @@ import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.MovieRepository;
 import uy.edu.um.wtf.repository.ReservationRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,7 +103,11 @@ public class MovieService {
                         .orElse(0.0);
 
                 // Actualizar la puntuación de la película
-                pelicula.setPuntuacion((float) promedio);
+                BigDecimal promedioRedondeado = BigDecimal.valueOf(promedio)
+                        .setScale(1, RoundingMode.HALF_UP);
+
+                // Actualizar la puntuación de la película
+                pelicula.setPuntuacion(promedioRedondeado.floatValue());
                 movieRepository.save(pelicula);
             }
         }
