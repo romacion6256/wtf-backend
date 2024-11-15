@@ -104,6 +104,7 @@ public class FunctionController {
 
         Long movieId = movie.get().getIdMovie();
 
+        // Obtener funciones para los parámetros especificados
         List<Function> functions = functionRepository.findByMovieAndBranchAndRoom(movieId, branchName, roomNumber);
         System.out.println("Funciones encontradas: " + functions.size()); // Verificación
 
@@ -112,12 +113,20 @@ public class FunctionController {
                     .body(Collections.singletonList("No hay funciones disponibles para los parámetros especificados"));
         }
 
+        // Filtrar funciones desde hoy en adelante
+        LocalDate today = LocalDate.now();
         List<String> dates = functions.stream()
-                .map(function -> function.getDate().toString()) // Conversión de fecha a String
-                .distinct()
+                .filter(function -> !function.getDate().isBefore(today)) // Filtrar solo fechas de hoy o futuras
+                .map(function -> function.getDate().toString())         // Convertir fechas a String
+                .distinct()                                             // Remover duplicados
                 .collect(Collectors.toList());
 
         System.out.println("Fechas encontradas: " + dates); // Verificación
+
+        if (dates.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay funciones futuras disponibles para los parámetros especificados"));
+        }
 
         return ResponseEntity.ok(dates);
     }
@@ -138,6 +147,7 @@ public class FunctionController {
         Long movieId = movie.get().getIdMovie();
         LocalDate fecha = LocalDate.parse(date); // Convertir la fecha de String a LocalDate
 
+        // Obtener funciones para la película, sucursal, sala y fecha especificados
         List<Function> functions = functionRepository.findByMovieRoomAndDate(movieId, branchName, roomNumber, fecha);
 
         if (functions.isEmpty()) {
@@ -145,12 +155,27 @@ public class FunctionController {
                     .body(Collections.singletonList("No hay horas disponibles"));
         }
 
+        // Filtrar las horas disponibles
+        LocalTime now = LocalTime.now();
         List<String> horasDisponibles = functions.stream()
-                .map(function -> function.getTime().toString())
+                .filter(function -> {
+                    // Si es hoy, mostrar solo las horas actuales en adelante
+                    if (fecha.equals(LocalDate.now())) {
+                        return !function.getTime().isBefore(now);
+                    }
+                    return true; // Si no es hoy, incluir todas las horas
+                })
+                .map(function -> function.getTime().toString()) // Convertir a String
                 .collect(Collectors.toList());
+
+        if (horasDisponibles.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList("No hay horas disponibles para el horario actual"));
+        }
 
         return ResponseEntity.ok(horasDisponibles);
     }
+
 
     @GetMapping("/obtenerFormatosDisponibles/{movieName}/{branchName}/{roomNumber}/{date}/{time}")
     public ResponseEntity<List<String>> obtenerFormatosDisponibles(
