@@ -14,6 +14,7 @@ import uy.edu.um.wtf.serivces.ReservationService;
 import uy.edu.um.wtf.serivces.UserService;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -103,9 +104,8 @@ public class ReservationController {
         String paymentMethod = (String) payload.get("paymentMethod");
         Date reservationDate = new Date();
 
-
         // Obtener la función
-        Long idFunction = Long.valueOf(String.valueOf(payload.get("idFunction")));  // Cambiado aquí
+        Long idFunction = Long.valueOf(String.valueOf(payload.get("idFunction")));
         Function funcion = functionRepository.findByIdFunction(idFunction)
                 .orElseThrow(() -> new IllegalArgumentException("Función no encontrada"));
 
@@ -121,6 +121,7 @@ public class ReservationController {
                             .orElseThrow(() -> new IllegalArgumentException("Snack con ID " + id + " no encontrado")))
                     .collect(Collectors.toList());
         }
+
         // Obtener la lista de asientos seleccionados
         List<Map<String, Integer>> seats = (List<Map<String, Integer>>) payload.get("seats");
 
@@ -129,8 +130,13 @@ public class ReservationController {
             return ResponseEntity.badRequest().body("Debe seleccionar al menos un asiento.");
         }
 
+        // Calcular el monto por asiento
+        BigDecimal totalMonto = new BigDecimal(String.valueOf(payload.get("monto")));
+        BigDecimal montoPorAsiento = totalMonto.divide(new BigDecimal(seats.size()), RoundingMode.HALF_UP);
+
         // Crear una reserva por cada asiento
         List<Long> reservationIds = new ArrayList<>();
+
         for (Map<String, Integer> seat : seats) {
             int rowSeat = seat.get("rowSeat");
             int columnSeat = seat.get("columnSeat");
@@ -146,10 +152,11 @@ public class ReservationController {
             reservation.setFunction(funcion);
             reservation.setSnacks(snacks);
 
+            // Crear la instancia de ReservationProfit con el monto dividido
             ReservationProfit reservationProfit = ReservationProfit.builder()
                     .clientId(idClient)
                     .functionId(idFunction)
-                    .monto(new BigDecimal(String.valueOf(payload.get("monto"))))
+                    .monto(montoPorAsiento)
                     .status("PAGO")
                     .reservation(reservation)
                     .build();
@@ -165,6 +172,7 @@ public class ReservationController {
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Reservas creadas exitosamente con IDs: " + reservationIds));
     }
+
 
     @GetMapping("/asientosReservados")
     public ResponseEntity<List<Map<String, Integer>>> obtenerAsientosReservados(
