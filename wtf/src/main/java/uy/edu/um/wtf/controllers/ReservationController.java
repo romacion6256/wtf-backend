@@ -133,7 +133,7 @@ public class ReservationController {
                 .clientId(idClient)
                 .functionId(idFunction)
                 .monto(new BigDecimal(String.valueOf(payload.get("monto"))))
-                .status("PAGADA")
+                .status("PAGO")
                 .build();
 
 
