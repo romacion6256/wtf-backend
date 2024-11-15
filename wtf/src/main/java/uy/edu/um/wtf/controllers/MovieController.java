@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uy.edu.um.wtf.entities.Admin;
-import uy.edu.um.wtf.entities.Genre;
-import uy.edu.um.wtf.entities.Movie;
-import uy.edu.um.wtf.entities.User;
+import uy.edu.um.wtf.entities.*;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
+import uy.edu.um.wtf.repository.FunctionRepository;
 import uy.edu.um.wtf.repository.GenreRepository;
 import uy.edu.um.wtf.repository.MovieRepository;
+import uy.edu.um.wtf.repository.ReservationProfitRepository;
 import uy.edu.um.wtf.serivces.MovieService;
 import uy.edu.um.wtf.serivces.UserService;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,12 @@ public class MovieController {
 
     @Autowired
     private GenreRepository genreRepository;
+
+    @Autowired
+    private ReservationProfitRepository reservationProfitRepository;
+
+    @Autowired
+    private FunctionRepository functionRepository;
 
     @GetMapping("/obtenerTodas")
     public List<Movie> obtenerTodas () {
@@ -82,5 +89,36 @@ public class MovieController {
     public ResponseEntity<Void> actualizarPuntuaciones() {
         movieService.actualizarPuntuacionesDePeliculas();
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/obtenerProfitPorPelicula")
+    public ResponseEntity<Map<String, BigDecimal>> obtenerProfitPorPelicula() {
+        // Obtener todas las películas
+        List<Movie> movies = movieService.obtenerTodasLasPeliculas();
+
+        Map<String, BigDecimal> movieProfits = new HashMap<>();
+
+        for (Movie movie : movies) {
+            // Obtener todas las funciones para cada película
+            List<Function> functions = functionRepository.findByMovie(movie);
+
+            // Sumar el profit de cada función
+            BigDecimal totalProfit = BigDecimal.ZERO;
+            for (Function function : functions) {
+                // Obtener todas las reservas con status "PAGO" para la función
+                List<ReservationProfit> reservationProfits = reservationProfitRepository.findByFunctionIdAndStatus(function.getIdFunction(), "PAGO");
+
+                // Sumar los montos
+                for (ReservationProfit reservationProfit : reservationProfits) {
+                    totalProfit = totalProfit.add(reservationProfit.getMonto());
+                }
+            }
+
+            // Agregar el profit total por película al mapa
+            movieProfits.put(movie.getMovieName(), totalProfit);
+        }
+
+        // Retornar la respuesta con los beneficios de cada película
+        return new ResponseEntity<>(movieProfits, HttpStatus.OK);
     }
 }
