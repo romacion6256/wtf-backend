@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/movie")
@@ -118,7 +119,18 @@ public class MovieController {
             movieProfits.put(movie.getMovieName(), totalProfit);
         }
 
-        // Retornar la respuesta con los beneficios de cada película
-        return new ResponseEntity<>(movieProfits, HttpStatus.OK);
+        // Ordenar el mapa por valores (profit) de mayor a menor
+        Map<String, BigDecimal> sortedMovieProfits = movieProfits.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue())) // Orden descendente
+                .collect(
+                        LinkedHashMap::new,
+                        (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                        LinkedHashMap::putAll
+                );
+
+        // Retornar la respuesta con los beneficios de cada película ordenados
+        return new ResponseEntity<>(sortedMovieProfits, HttpStatus.OK);
     }
+
 }
