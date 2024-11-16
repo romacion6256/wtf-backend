@@ -69,6 +69,12 @@ public class UserService {
         if (!validEmail(admin.getEmail())) {
             throw new InvalidInformation("Invalid email");
         }
+        if (admin.getPassword().length() <= 8) {
+            throw new InvalidInformation("Password must be at least 8 characters long");
+        }
+        if (admin.getUserName() == null || admin.getUserName().isEmpty()) {
+            throw new InvalidInformation("Invalid username");
+        }
         userRepository.save(admin);
         System.out.println("Admin saved successfully: " + admin.getEmail());
     }
@@ -99,22 +105,36 @@ public class UserService {
         cambios.forEach((campo, valor) -> {
             switch (campo) {
                 case "userName":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Nombre de usuario inválido");
+                    }
                     usuario.setUserName(valor);
                     break;
                 case "password":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Contraseña inválida");
+                    }
+                    if (valor.length() < 8) {
+                        throw new IllegalArgumentException("Contraseña inválida, debe ser mayor a 8 caracteres");
+                    }
                     usuario.setPassword(valor);
                     break;
                 case "name":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Nombre inválido");
+                    }
                     usuario.setName(valor);
                     break;
                 case "surname":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Apellido inválido");
+                    }
                     usuario.setSurname(valor);
                     break;
                 case "email":
                     if (!validEmail(valor)) {
                         throw new IllegalArgumentException("Email inválido");
                     }
-
                     usuario.setEmail(valor);
                     break;
                 case "phoneNumber":
@@ -124,6 +144,9 @@ public class UserService {
                     usuario.setPhoneNumber(Long.valueOf(valor));
                     break;
                 case "adress":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Dirección inválida");
+                    }
                     usuario.setAdress(valor);
                     break;
                 case "document":
@@ -133,6 +156,12 @@ public class UserService {
                     usuario.setDocument(Long.valueOf(valor));
                     break;
                 case "birthDate":
+                    if (valor == null || valor.isEmpty()) {
+                        throw new IllegalArgumentException("Fecha de nacimiento inválida");
+                    }
+                    if (LocalDate.parse(valor).isAfter(LocalDate.now())) {
+                        throw new IllegalArgumentException("Fecha de nacimiento inválida");
+                    }
                     usuario.setBirthDate(LocalDate.parse(valor));
                     break;
 
@@ -148,6 +177,24 @@ public class UserService {
         Client client = (Client) userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + clientId));
 
+        if (card == null) {
+            throw new IllegalArgumentException("Tarjeta no puede ser nula");
+        }
+        if (card.getCardNumber() == null) {
+            throw new IllegalArgumentException("Número de tarjeta no puede ser nulo");
+        }
+        if (card.getExpirationMonth() < 1 || card.getExpirationMonth() > 12) {
+            throw new IllegalArgumentException("Mes de vencimiento inválido");
+        }
+        if (card.getCvv() < 100 || card.getCvv() > 999) {
+            throw new IllegalArgumentException("CVV inválido");
+        }
+
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaVencimiento = LocalDate.of(card.getExpirationYear(), card.getExpirationMonth(), 1);
+        if (fechaVencimiento.isBefore(fechaActual)) {
+            throw new IllegalArgumentException("Tarjeta vencida");
+        }
 
         Card existingCard = client.getCard();
         client.setCard(null);

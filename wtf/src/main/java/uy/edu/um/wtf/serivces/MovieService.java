@@ -47,6 +47,9 @@ public class MovieService {
         if (movie.getDuration() == null) {
             throw new InvalidInformation("Duracion de la pelicula no puede ser nula");
         }
+        if (movie.getGenre() == null) {
+            throw new InvalidInformation("Genero de la pelicula no puede ser nulo");
+        }
         return movieRepository.save(movie);
     }
     public Movie getMovieById(Long id) {

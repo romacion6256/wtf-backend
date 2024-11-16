@@ -8,6 +8,7 @@ import uy.edu.um.wtf.entities.Movie;
 import uy.edu.um.wtf.exceptions.InvalidInformation;
 import uy.edu.um.wtf.repository.FunctionRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,6 +30,9 @@ public class FunctionService {
         if (funcion.getDate() == null) {
             throw new InvalidInformation("La fecha no puede ser nula");
         }
+        if (funcion.getDate().isBefore(LocalDate.now())) {
+            throw new InvalidInformation("La fecha no puede ser anterior a la actual");
+        }
         if (funcion.getTime() == null) {
             throw new InvalidInformation("La hora no puede ser nula");
         }
@@ -40,6 +44,12 @@ public class FunctionService {
         }
         if (functionRepository.findByFormatAndSubtitledAndDateAndTimeAndMovieAndRoom(funcion.getFormat(), funcion.getSubtitled(), funcion.getDate(), funcion.getTime(), funcion.getMovie(), funcion.getRoom()).isPresent()) {
             throw new InvalidInformation("La funcion ya existe");
+        }
+        if (functionRepository.findByDateAndTimeAndRoom(funcion.getDate(), funcion.getTime(), funcion.getRoom()).isPresent()) {
+            throw new InvalidInformation("La sala ya esta ocupada en ese horario");
+        }
+        if (funcion.getPrice().compareTo(BigDecimal.valueOf(0.0)) <= 0) {
+            throw new InvalidInformation("El precio no puede ser menor o igual a 0");
         }
         return functionRepository.save(funcion);
     }

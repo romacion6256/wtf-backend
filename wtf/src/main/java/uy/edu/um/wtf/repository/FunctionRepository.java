@@ -79,5 +79,5 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
     List<Long> findDistinctFunctionIdsByMovieId(@Param("movieId") Long movieId);
 
 
-
+    Optional<Object> findByDateAndTimeAndRoom(LocalDate date, LocalTime time, Room room);
 }
