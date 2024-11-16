@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,9 +131,25 @@ public class ReservationController {
             return ResponseEntity.badRequest().body("Debe seleccionar al menos un asiento.");
         }
 
-        // Calcular el monto por asiento
-        BigDecimal totalMonto = new BigDecimal(String.valueOf(payload.get("monto")));
-        BigDecimal montoPorAsiento = totalMonto.divide(new BigDecimal(seats.size()), RoundingMode.HALF_UP);
+        // Calcular el precio total por los asientos
+        BigDecimal precioFuncion = funcion.getPrice();
+        BigDecimal totalPrecioAsientos = precioFuncion.multiply(BigDecimal.valueOf(seats.size()));
+
+        // Calcular el precio total por los snacks
+        BigDecimal totalPrecioSnacks = snacks.stream()
+                .map(Snack::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Aplicar descuento si la reserva está dentro del plazo
+        BigDecimal totalMonto;
+        LocalDate fechaLimiteDescuento = LocalDate.of(2024, 11, 1).plusMonths(6);
+        if (!reservationDate.toInstant().isAfter(fechaLimiteDescuento.atStartOfDay(ZoneId.systemDefault()).toInstant())) {
+            // Solo se cobra el precio de los snacks si aplica el descuento
+            totalMonto = totalPrecioSnacks;
+        } else {
+            // Precio completo
+            totalMonto = totalPrecioAsientos.add(totalPrecioSnacks);
+        }
 
         // Crear una reserva por cada asiento
         List<Long> reservationIds = new ArrayList<>();
@@ -152,11 +169,11 @@ public class ReservationController {
             reservation.setFunction(funcion);
             reservation.setSnacks(snacks);
 
-            // Crear la instancia de ReservationProfit con el monto dividido
+            // Crear la instancia de ReservationProfit
             ReservationProfit reservationProfit = ReservationProfit.builder()
                     .clientId(idClient)
                     .functionId(idFunction)
-                    .monto(montoPorAsiento)
+                    .monto(totalMonto) // Asignar el monto calculado
                     .status("PAGO")
                     .reservation(reservation)
                     .build();
@@ -172,6 +189,7 @@ public class ReservationController {
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Reservas creadas exitosamente con IDs: " + reservationIds));
     }
+
 
 
     @GetMapping("/asientosReservados")
