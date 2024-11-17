@@ -133,22 +133,23 @@ public class ReservationController {
 
         // Calcular el precio total por los asientos
         BigDecimal precioFuncion = funcion.getPrice();
-        BigDecimal totalPrecioAsientos = precioFuncion.multiply(BigDecimal.valueOf(seats.size()));
 
         // Calcular el precio total por los snacks
         BigDecimal totalPrecioSnacks = snacks.stream()
                 .map(Snack::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        BigDecimal precioDeSnackPorAsiento = totalPrecioSnacks.divide(new BigDecimal(seats.size()), RoundingMode.HALF_UP);
+
         // Aplicar descuento si la reserva está dentro del plazo
         BigDecimal totalMonto;
         LocalDate fechaLimiteDescuento = LocalDate.of(2024, 11, 1).plusMonths(6);
         if (!reservationDate.toInstant().isAfter(fechaLimiteDescuento.atStartOfDay(ZoneId.systemDefault()).toInstant())) {
             // Solo se cobra el precio de los snacks si aplica el descuento
-            totalMonto = totalPrecioSnacks;
+            totalMonto = precioDeSnackPorAsiento;
         } else {
             // Precio completo
-            totalMonto = totalPrecioAsientos.add(totalPrecioSnacks);
+            totalMonto = precioFuncion.add(precioDeSnackPorAsiento);
         }
 
         // Crear una reserva por cada asiento
